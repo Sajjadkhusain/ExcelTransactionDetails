@@ -262,7 +262,7 @@ const Transactiondetails = () => {
             onClick={handleDownload}
             className="search"
             style={{
-              marginLeft: 10,
+              marginLeft: 0,
               backgroundColor: filteredData.length === 0 ? "#ccc" : "",
               cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
             }}
