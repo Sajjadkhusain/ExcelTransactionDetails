@@ -1,9 +1,10 @@
 import "./App.css";
+import Transactiondetails from "./component/Transactiondetails";
 
 function App() {
   return (
     <>
-      <h2>Hello Every one</h2>
+      <Transactiondetails />
     </>
   );
 }
