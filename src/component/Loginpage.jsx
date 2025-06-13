@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Avatar from "react-avatar";
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,13 +12,7 @@ const LoginPage = ({ onLogin }) => {
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="custom-card">
         <div className="mb-3 text-center">
-          <Avatar
-            src={`${process.env.PUBLIC_URL}/img/img.jpg`}
-            round={true}
-            size="100"
-            alt="Avatar"
-            style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)" }}
-          />
+          <img src={`${process.env.PUBLIC_URL}/img/img.jpg`} height={150} />
         </div>
         <form onSubmit={handleSubmit}>
           <input
