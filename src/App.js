@@ -16,18 +16,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // loader state
 
   useEffect(() => {
     const auth = localStorage.getItem("isAuthenticated");
     if (auth === "true") {
       setIsAuthenticated(true);
     }
+    setLoading(false); // mark loading as done
   }, []);
 
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "#w@seem123#") {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
+
       toast.success("Login Successful!", {
         className: "custom-toast",
         progressClassName: "custom-progress",
@@ -38,8 +41,8 @@ function App() {
               width: "24px",
               height: "24px",
               borderRadius: "50%",
-              backgroundColor: "#ffff", // Circle color
-              color: "#50698d", // Checkmark color
+              backgroundColor: "#ffff",
+              color: "#50698d",
               textAlign: "center",
               lineHeight: "24px",
               fontSize: "16px",
@@ -61,8 +64,8 @@ function App() {
               width: "24px",
               height: "24px",
               borderRadius: "50%",
-              backgroundColor: "#ffff", // Circle color
-              color: "#50698d", // Checkmark color
+              backgroundColor: "#ffff",
+              color: "#50698d",
               textAlign: "center",
               lineHeight: "24px",
               fontSize: "16px",
@@ -88,6 +91,14 @@ function App() {
       {/* <Footer /> */}
     </>
   );
+
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>
