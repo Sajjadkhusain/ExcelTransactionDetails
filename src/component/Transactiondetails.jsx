@@ -4,13 +4,11 @@ import { saveAs } from "file-saver";
 import "./Transactiondetails.css";
 import "font-awesome/css/font-awesome.min.css";
 
-// ✅ Parse dd-mm-yyyy into a Date object
 const parseDate = (str) => {
   const [dd, mm, yyyy] = str.split("-");
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
 
-// ✅ Format date like 10-06-2025 11:52:00
 const formatDateTime = (value) => {
   if (!value) return "";
 
@@ -33,7 +31,7 @@ const formatDateTime = (value) => {
   )}:${pad(date.getSeconds())}`;
 };
 
-const Transactiondetails = () => {
+const Transactiondetails = ({ onLogout }) => {
   const [excelData, setExcelData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -95,7 +93,7 @@ const Transactiondetails = () => {
         .toLowerCase()
         .includes(text.toLowerCase());
 
-      const dateStr = row["Date"].slice(0, 10); // "dd-mm-yyyy"
+      const dateStr = row["Date"].slice(0, 10);
       const date = parseDate(dateStr);
 
       const matchFrom = from ? date >= new Date(from) : true;
@@ -107,8 +105,6 @@ const Transactiondetails = () => {
 
       return matchText && matchFrom && matchTo && matchScheme;
     });
-
-    // ✅ Sort by date ascending
     filtered.sort((a, b) => {
       const dateA = parseDate(a["Date"].slice(0, 10));
       const dateB = parseDate(b["Date"].slice(0, 10));
@@ -239,175 +235,74 @@ const Transactiondetails = () => {
 
   return (
     <div className="container text-center card">
-      <span
+      <div
         style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           padding: "20px",
           fontFamily: "sans-serif",
-          display: "block",
-          fontSize: "20px",
-          fontWeight: "bold",
+          position: "relative",
         }}
       >
-        Transaction Details for FPS
-      </span>
-      {/* <div className="row justify-content-center align-items-center mt-3">
-        <div className="col-md-2 mb-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchText}
-            onChange={handleSearch}
-            className="form-control"
-          />
-        </div>
-        <div className="col-md-2 mb-2">
-          <input
-            type="date"
-            value={fromDate}
-            onChange={handleFromDateChange}
-            className="form-control"
-          />
-        </div>
-        TO
-        <div className="col-md-2 mb-2">
-          <input
-            type="date"
-            value={toDate}
-            onChange={handleToDateChange}
-            className="form-control"
-          />
-        </div>
-        <div className="col-md-2 mb-2">
-          <select
-            value={filterScheme}
-            onChange={handleSchemeFilter}
-            className="form-control"
-          >
-            <option value="">All Schemes</option>
-            {Array.from(new Set(excelData.map((row) => row["Scheme"])))
-              .filter(Boolean)
-              .map((scheme, index) => (
-                <option key={index} value={scheme}>
-                  {scheme}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="col-md-1 mb-2">
-          <button
-            onClick={handleDownload}
-            className="search"
-            style={{
-              marginLeft: 0,
-              backgroundColor: filteredData.length === 0 ? "#ccc" : "",
-              cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
-            }}
-            disabled={filteredData.length === 0}
-          >
-            Download
-          </button>
-        </div>
-        <div className="col-md-2 mb-2">
-          <label htmlFor="uploadExcel" className="custom-file-upload">
-            <i className="fa fa-upload" aria-hidden="true"></i> Upload File
-          </label>
-          <input
-            id="uploadExcel"
-            type="file"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-          />
-        </div>
-        <div className="col-md-1 mb-2">
-          <button
-            onClick={handlePrint}
-            className="search"
-            style={{ backgroundColor: "#4caf50", color: "#fff" }}
-          >
-            <i className="fa fa-print" aria-hidden="true"></i> Print
-          </button>
-        </div>
-      </div> */}
-      <div className="row align-items-center mt-3 gx-2">
-        <div className="col-md-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchText}
-            onChange={handleSearch}
-            className="form-control"
-          />
-        </div>
-
-        <div className="col-md-2">
-          <input
-            type="date"
-            value={fromDate}
-            onChange={handleFromDateChange}
-            className="form-control"
-          />
-        </div>
-
-        <div className="col-auto">TO</div>
-
-        <div className="col-md-2">
-          <input
-            type="date"
-            value={toDate}
-            onChange={handleToDateChange}
-            className="form-control"
-          />
-        </div>
-
-        <div className="col-md-2">
-          <select
-            value={filterScheme}
-            onChange={handleSchemeFilter}
-            className="form-control"
-          >
-            <option value="">All Schemes</option>
-            {Array.from(new Set(excelData.map((row) => row["Scheme"])))
-              .filter(Boolean)
-              .map((scheme, index) => (
-                <option key={index} value={scheme}>
-                  {scheme}
-                </option>
-              ))}
-          </select>
-        </div>
-
-        <div className="col-md-1">
-          <button
-            onClick={handleDownload}
-            className="search"
-            style={{
-              marginLeft: 0,
-              backgroundColor: filteredData.length === 0 ? "#ccc" : "",
-              cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
-            }}
-            disabled={filteredData.length === 0}
-          >
-            Download
-          </button>
-        </div>
-
-        <div className="col-md-2">
+        <div style={{ width: "80px" }}></div>
+        <span
+          style={{
+            fontSize: "20px",
+            fontWeight: "bold",
+            textAlign: "center",
+            flex: 1,
+          }}
+        >
+          Transaction Details for FPS
+        </span>
+        <div style={{ display: "flex", gap: "10px" }}>
           <label
             htmlFor="uploadExcel"
-            className="custom-file-upload btn btn-secondary"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#50698d",
+              color: "#fff",
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            title="Upload Excel"
           >
-            <i className="fa fa-upload" aria-hidden="true"></i> Upload File
+            <i className="fa fa-upload" aria-hidden="true"></i>
+            <input
+              id="uploadExcel"
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
           </label>
-          <input
-            id="uploadExcel"
-            type="file"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-        </div>
-
-        <div className="col-auto">
+          <button
+            onClick={handleDownload}
+            className="btn"
+            title="Download"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "#50698d",
+              color: "#fff",
+              cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 0,
+            }}
+            disabled={filteredData.length === 0}
+          >
+            <i className="bi bi-download"></i>
+          </button>
           <button
             onClick={handlePrint}
             className="btn"
@@ -427,9 +322,78 @@ const Transactiondetails = () => {
           >
             <i className="fa fa-print" aria-hidden="true"></i>
           </button>
+
+          <button
+            onClick={onLogout}
+            className="btn"
+            title="Logout"
+            style={{
+              width: "40px",
+              backgroundColor: "#50698d",
+              color: "#fff",
+              height: "40px",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 0,
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+            }}
+          >
+            <i className="bi bi-box-arrow-right"></i>
+          </button>
         </div>
       </div>
+      <div className="row align-items-center mt-3 gx-2 justify-content-center">
+        <div className="col-md-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchText}
+            onChange={handleSearch}
+            className="form-control"
+          />
+        </div>
 
+        <div className="col-md-2">
+          <input
+            type="date"
+            value={fromDate}
+            onChange={handleFromDateChange}
+            className="form-control"
+          />
+        </div>
+
+        <div className="col-md-1 text-center">
+          <span className="fw-bold">TO</span>
+        </div>
+
+        <div className="col-md-2">
+          <input
+            type="date"
+            value={toDate}
+            onChange={handleToDateChange}
+            className="form-control"
+          />
+        </div>
+
+        <div className="col-md-2">
+          <select
+            value={filterScheme}
+            onChange={handleSchemeFilter}
+            className="form-control"
+          >
+            <option value="">All Schemes</option>
+            {Array.from(new Set(excelData.map((row) => row["Scheme"])))
+              .filter(Boolean)
+              .map((scheme, index) => (
+                <option key={index} value={scheme}>
+                  {scheme}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
       <div className="card mt-4" id="printable-table">
         <div className="card-body p-0">
           <table className="table table-bordered table-striped mb-0">

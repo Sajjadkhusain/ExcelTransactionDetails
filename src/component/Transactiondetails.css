@@ -3,10 +3,8 @@
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  /* width: 150px; */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-
 .search:focus {
   border-color: #50698d;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
@@ -48,7 +46,7 @@ td {
   text-align: center;
 }
 input[type="file"] {
-  display: none; /* hide default input */
+  display: none;
 }
 
 .custom-file-upload {
@@ -75,7 +73,7 @@ input[type="file"] {
 
 .pagination-container {
   display: flex;
-  justify-content: flex-start; /* Left align */
+  justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
 }
@@ -116,4 +114,18 @@ input[type="file"] {
 .pagination-ellipsis {
   padding: 6px 8px;
   color: #777;
+}
+
+.custom-card {
+  width: 350px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.Toastify__progress-bar {
+  background: #ffffff !important;
 }
