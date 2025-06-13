@@ -16,14 +16,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // loader state
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const auth = localStorage.getItem("isAuthenticated");
     if (auth === "true") {
       setIsAuthenticated(true);
     }
-    setLoading(false); // mark loading as done
+    setLoading(false);
   }, []);
 
   const handleLogin = (username, password) => {
@@ -78,7 +77,6 @@ function App() {
       });
     }
   };
-
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("isAuthenticated");

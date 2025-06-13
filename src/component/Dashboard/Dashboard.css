@@ -3,7 +3,6 @@
   max-width: 1200px;
   margin: auto;
 }
-
 .content-section {
   margin-top: 6rem;
   display: flex;
@@ -15,10 +14,8 @@
 
 .quotes {
   flex: 1 1 400px;
-  /* border: 1px solid lightgray; */
   padding: 1.5rem;
   border-radius: 10px;
-  /* background-color: #f9f9f9; */
 }
 
 .quotes h1 {
