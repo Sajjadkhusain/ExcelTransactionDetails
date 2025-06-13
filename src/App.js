@@ -23,9 +23,9 @@ function App() {
       setIsAuthenticated(true);
     }
   }, []);
-  /*#w@seem123#*/
+
   const handleLogin = (username, password) => {
-    if (username === "admin" && password === "khan") {
+    if (username === "admin" && password === "#w@seem123#") {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
       toast.success("Login Successful!", {
