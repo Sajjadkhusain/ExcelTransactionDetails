@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import LoginPage from "./component/Loginpage";
 import Transactiondetails from "./component/Transactiondetails";
@@ -7,9 +7,17 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    const auth = localStorage.getItem("isAuthenticated");
+    if (auth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "#w@seem123#") {
       setIsAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true");
       toast.success("Login Successful!", {
         style: {
           backgroundColor: "#50698d",
@@ -70,6 +78,7 @@ function App() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
   };
   return (
     <>
