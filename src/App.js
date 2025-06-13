@@ -8,7 +8,7 @@ import {
 import "./App.css";
 import LoginPage from "./component/Login/Loginpage";
 import Dashboard from "./component/Dashboard/Dashboard";
-import Transactiondetails from "./component/Transactiondetails";
+import Transactiondetails from "./component/Report/Transactiondetails";
 import Header from "./component/Header/Header";
 import Footer from "./component/Footer/Footer";
 import { ToastContainer, toast } from "react-toastify";
