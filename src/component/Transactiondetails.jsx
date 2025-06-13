@@ -200,6 +200,42 @@ const Transactiondetails = () => {
       { wheat: 0, frice: 0 }
     );
   };
+  const handlePrint = () => {
+    const printContent = document.getElementById("printable-table").innerHTML;
+
+    const { wheat, frice } = calculateTotals();
+
+    const totalsHtml = `
+    <div style="margin-top: 20px; font-weight: bold; text-align: right;">
+      Total Wheat (Kgs): ${wheat.toFixed(2)} &nbsp; | &nbsp;
+      Total FRice (Kgs): ${frice.toFixed(2)}
+    </div>
+  `;
+
+    const printWindow = window.open("", "", "width=900,height=700");
+    printWindow.document.write(`
+    <html>
+      <head>
+        <title>Transaction Details</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+          th { background-color: #f2f2f2; }
+        </style>
+      </head>
+      <body>
+        <h2 style="text-align: center;">Transaction Details</h2>
+        ${printContent}
+        ${totalsHtml}
+      </body>
+    </html>
+  `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
 
   return (
     <div className="container text-center card">
@@ -214,7 +250,7 @@ const Transactiondetails = () => {
       >
         Transaction Details for FPS
       </span>
-      <div className="row justify-content-center align-items-center mt-3">
+      {/* <div className="row justify-content-center align-items-center mt-3">
         <div className="col-md-2 mb-2">
           <input
             type="text"
@@ -282,9 +318,119 @@ const Transactiondetails = () => {
             onChange={handleFileUpload}
           />
         </div>
+        <div className="col-md-1 mb-2">
+          <button
+            onClick={handlePrint}
+            className="search"
+            style={{ backgroundColor: "#4caf50", color: "#fff" }}
+          >
+            <i className="fa fa-print" aria-hidden="true"></i> Print
+          </button>
+        </div>
+      </div> */}
+      <div className="row align-items-center mt-3 gx-2">
+        <div className="col-md-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchText}
+            onChange={handleSearch}
+            className="form-control"
+          />
+        </div>
+
+        <div className="col-md-2">
+          <input
+            type="date"
+            value={fromDate}
+            onChange={handleFromDateChange}
+            className="form-control"
+          />
+        </div>
+
+        <div className="col-auto">TO</div>
+
+        <div className="col-md-2">
+          <input
+            type="date"
+            value={toDate}
+            onChange={handleToDateChange}
+            className="form-control"
+          />
+        </div>
+
+        <div className="col-md-2">
+          <select
+            value={filterScheme}
+            onChange={handleSchemeFilter}
+            className="form-control"
+          >
+            <option value="">All Schemes</option>
+            {Array.from(new Set(excelData.map((row) => row["Scheme"])))
+              .filter(Boolean)
+              .map((scheme, index) => (
+                <option key={index} value={scheme}>
+                  {scheme}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div className="col-md-1">
+          <button
+            onClick={handleDownload}
+            className="search"
+            style={{
+              marginLeft: 0,
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "",
+              cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
+            }}
+            disabled={filteredData.length === 0}
+          >
+            Download
+          </button>
+        </div>
+
+        <div className="col-md-2">
+          <label
+            htmlFor="uploadExcel"
+            className="custom-file-upload btn btn-secondary"
+          >
+            <i className="fa fa-upload" aria-hidden="true"></i> Upload File
+          </label>
+          <input
+            id="uploadExcel"
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileUpload}
+            style={{ display: "none" }}
+          />
+        </div>
+
+        <div className="col-auto">
+          <button
+            onClick={handlePrint}
+            className="btn"
+            title="Print"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#50698d",
+              color: "#fff",
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 0,
+            }}
+          >
+            <i className="fa fa-print" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
 
-      <div className="card mt-4">
+      <div className="card mt-4" id="printable-table">
         <div className="card-body p-0">
           <table className="table table-bordered table-striped mb-0">
             <thead className="table-light">
