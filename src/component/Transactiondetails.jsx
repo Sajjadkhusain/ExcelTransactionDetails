@@ -31,7 +31,7 @@ const formatDateTime = (value) => {
   )}:${pad(date.getSeconds())}`;
 };
 
-const Transactiondetails = ({ onLogout }) => {
+const Transactiondetails = () => {
   const [excelData, setExcelData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -321,26 +321,6 @@ const Transactiondetails = ({ onLogout }) => {
             }}
           >
             <i className="fa fa-print" aria-hidden="true"></i>
-          </button>
-
-          <button
-            onClick={onLogout}
-            className="btn"
-            title="Logout"
-            style={{
-              width: "40px",
-              backgroundColor: "#50698d",
-              color: "#fff",
-              height: "40px",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 0,
-              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-            }}
-          >
-            <i className="bi bi-box-arrow-right"></i>
           </button>
         </div>
       </div>

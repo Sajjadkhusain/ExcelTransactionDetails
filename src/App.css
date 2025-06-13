@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+/******Toastify css *************/
+/* Add this to your CSS file */
+.custom-toast {
+  background-color: #50698d !important; /* Deep teal background */
+  color: #ffffff !important; /* White text */
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.custom-progress {
+  background: #00e676 !important; /* Light green progress bar */
+}
