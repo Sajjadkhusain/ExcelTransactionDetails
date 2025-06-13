@@ -10,7 +10,7 @@ function App() {
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "#w@seem123#") {
       setIsAuthenticated(true);
-      toast.success("Login successful!", {
+      toast.success("Login Successful!", {
         style: {
           backgroundColor: "#50698d",
           color: "#fff",
@@ -38,7 +38,7 @@ function App() {
         ),
       });
     } else {
-      toast.error("Invalid credentials", {
+      toast.error("Invalid Credentials", {
         style: {
           backgroundColor: "#50698d",
           color: "#fff",
