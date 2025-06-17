@@ -20,7 +20,9 @@
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
+  position: relative;
 }
 
 .nav-links a {
@@ -32,4 +34,39 @@
 
 .nav-links a:hover {
   color: #00bcd4;
+}
+
+/*********************dropdown*****************************/
+/* Ensure dropdown menu doesn't collapse or shift unexpectedly */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  background-color: #50698d;
+  border-radius: 8px;
+  padding: 8px 0;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 160px;
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-item:hover {
+  background-color: #50698d;
+  color: #fff;
 }
