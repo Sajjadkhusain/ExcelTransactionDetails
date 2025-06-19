@@ -306,6 +306,7 @@ const Transactiondetails = () => {
           <button
             onClick={handlePrint}
             className="btn"
+            disabled={currentItems.length === 0}
             title="Print"
             style={{
               borderRadius: "50%",
@@ -379,14 +380,14 @@ const Transactiondetails = () => {
           <table className="table table-bordered table-striped mb-0">
             <thead className="table-light">
               <tr>
-                <th>Sl No</th>
-                <th>SRC No</th>
-                <th>Scheme</th>
-                <th>Avail Type</th>
-                <th>Date</th>
-                <th>Wheat (Kgs)</th>
-                <th>FRice (Kgs)</th>
-                <th>Portability</th>
+                <th className="headerColor">Sl No</th>
+                <th className="headerColor">SRC No</th>
+                <th className="headerColor">Scheme</th>
+                <th className="headerColor">Avail Type</th>
+                <th className="headerColor">Date</th>
+                <th className="headerColor">Wheat (Kgs)</th>
+                <th className="headerColor">FRice (Kgs)</th>
+                <th className="headerColor">Portability</th>
               </tr>
             </thead>
             <tbody>

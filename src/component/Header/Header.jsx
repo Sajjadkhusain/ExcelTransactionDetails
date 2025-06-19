@@ -38,8 +38,8 @@ const Header = ({ onLogout }) => {
               <Link to="/transactions" className="dropdown-item">
                 Transactions
               </Link>
-              <Link to="/demo" className="dropdown-item">
-                RPS
+              <Link to="/Fps" className="dropdown-item">
+                FPS
               </Link>
             </div>
           </div>

@@ -129,3 +129,8 @@ input[type="file"] {
 .Toastify__progress-bar {
   background: #ffffff !important;
 }
+
+.headerColor {
+  background-color: #50698d !important;
+  color: white !important;
+}

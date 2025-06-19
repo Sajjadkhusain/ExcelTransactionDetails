@@ -9,6 +9,7 @@ import "./App.css";
 import LoginPage from "./component/Login/Loginpage";
 import Dashboard from "./component/Dashboard/Dashboard";
 import Transactiondetails from "./component/Report/Transactiondetails";
+import Fps from "./component/Report/Fps";
 import Header from "./component/Header/Header";
 import Footer from "./component/Footer/Footer";
 import { ToastContainer, toast } from "react-toastify";
@@ -129,6 +130,18 @@ function App() {
             isAuthenticated ? (
               <ProtectedLayout>
                 <Transactiondetails />
+              </ProtectedLayout>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/fps"
+          element={
+            isAuthenticated ? (
+              <ProtectedLayout>
+                <Fps />
               </ProtectedLayout>
             ) : (
               <Navigate to="/" />
