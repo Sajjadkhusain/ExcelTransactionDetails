@@ -1,10 +1,84 @@
-.coming-soon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #1e1e2f;
-  color: #ffffff;
-  font-size: 3rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+.custom-search-input:focus {
+  box-shadow: none !important;
+  border-color: #ced4da !important; /* optional: match default border color */
+  outline: none !important;
+}
+
+.input-group-text {
+  border-right: 0;
+}
+
+.custom-search-input {
+  border-left: 0;
+  padding-left: 0;
+}
+input:focus,
+.form-control:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.custom-dropdown {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #495057;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-dropdown:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.custom-dropdown option {
+  padding: 10px;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  margin: 0 3px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.pagination-btn:hover {
+  background-color: #50698d;
+  color: white;
+  border-color: #50698d;
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #50698d;
+}
+
+.pagination-ellipsis {
+  padding: 6px 8px;
+  color: #777;
+}
+.custom-dropdown {
+  appearance: none; /* Hide default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E")
+    no-repeat right 1rem center;
+  background-size: 12px 8px;
+  padding-right: 2.5rem;
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
 }
