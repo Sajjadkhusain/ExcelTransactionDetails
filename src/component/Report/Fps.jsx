@@ -203,7 +203,7 @@ const Fps = () => {
             title="Print"
             style={{
               borderRadius: "50%",
-              backgroundColor: "#50698d",
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "#50698d",
               color: "#fff",
               width: "40px",
               height: "40px",
@@ -211,7 +211,9 @@ const Fps = () => {
               alignItems: "center",
               justifyContent: "center",
               padding: 0,
+              cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
             }}
+            disabled={filteredData.length === 0}
           >
             <i className="fa fa-print" aria-hidden="true"></i>
           </button>
