@@ -322,11 +322,11 @@ const Fps = () => {
           <table className="table table-bordered table-striped mb-0">
             <thead className="table-light">
               <tr>
-                <th>S.No</th>
-                <th>Ration Card No</th>
-                <th>Member Name (Eng)</th>
-                <th>Family Member</th>
-                <th>Scheme</th>
+                <th className="headerColor">S.No</th>
+                <th className="headerColor">Ration Card No</th>
+                <th className="headerColor">Member Name</th>
+                <th className="headerColor">Family Member Count</th>
+                <th className="headerColor">Scheme</th>
               </tr>
             </thead>
             <tbody>

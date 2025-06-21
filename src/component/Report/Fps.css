@@ -91,3 +91,7 @@ input:focus,
   font-weight: bold;
   font-size: 12px;
 }
+.headerColor {
+  background-color: #50698d !important;
+  color: white !important;
+}
