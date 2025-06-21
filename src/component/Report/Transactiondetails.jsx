@@ -492,8 +492,10 @@ const Transactiondetails = () => {
           const { wheat, frice } = calculateTotals();
           return (
             <div>
-              Total Wheat (Kgs): {wheat.toFixed(2)} &nbsp; | &nbsp; Total FRice
-              (Kgs): {frice.toFixed(2)}
+              <span className="badge-custom mb-2">
+                Total Wheat (Kgs): {wheat.toFixed(2)} &nbsp; | &nbsp; Total
+                FRice (Kgs): {frice.toFixed(2)}
+              </span>
             </div>
           );
         })()}
