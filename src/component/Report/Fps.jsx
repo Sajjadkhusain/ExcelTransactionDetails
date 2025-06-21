@@ -89,38 +89,66 @@ const Fps = () => {
 
   const handleDownload = () => {
     const ws = XLSX.utils.json_to_sheet(filteredData);
+
+    const totalRowIndex = filteredData.length + 1;
+    const targetCell = `C${totalRowIndex + 1}`;
+
+    // Add leading spaces for visual indent (Excel respects these)
+    const indent = "     "; // ~5 spaces
+    const totalText = `${indent}Total Members: ${filteredData.length}`;
+
+    ws[targetCell] = {
+      t: "s",
+      v: totalText,
+    };
+
+    // Update range to include the new row
+    const range = XLSX.utils.decode_range(ws["!ref"]);
+    range.e.r = totalRowIndex;
+    ws["!ref"] = XLSX.utils.encode_range(range);
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Filtered Data");
+
     const excelBuffer = XLSX.write(wb, {
       bookType: "xlsx",
       type: "array",
     });
+
     const data = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
+
     saveAs(data, "FilteredData.xlsx");
   };
 
   const handlePrint = () => {
     const printContent = document.getElementById("printable-table").innerHTML;
+    const totalRowHtml = `
+    <div style="margin-top: 20px; text-align: right; font-weight: bold;">
+      Total Members: ${filteredData.length}
+    </div>
+  `;
+
     const printWindow = window.open("", "", "width=900,height=700");
     printWindow.document.write(`
-      <html>
-        <head>
-          <title>Transaction Details</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>
-          <h2 style="text-align: center;">Transaction Details</h2>
-          ${printContent}
-        </body>
-      </html>
-    `);
+    <html>
+      <head>
+        <title>Transaction Details</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+          th { background-color: #f2f2f2; }
+        </style>
+      </head>
+      <body>
+        <h2 style="text-align: center;">Transaction Details</h2>
+        ${printContent}
+        ${totalRowHtml}
+      </body>
+    </html>
+  `);
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
