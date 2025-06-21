@@ -395,12 +395,11 @@ const Fps = () => {
               Next &gt;
             </button>
           </div>
-
-          <div className="text-end fw-bold">
-            Total Members: {filteredData.length}
-          </div>
         </div>
       )}
+      <div className="text-end fw-bold mt-3">
+        Total Members: {filteredData.length}
+      </div>
     </div>
   );
 };
