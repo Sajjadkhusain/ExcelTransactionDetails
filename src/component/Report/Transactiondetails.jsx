@@ -326,7 +326,7 @@ const Transactiondetails = () => {
         </div>
       </div>
       <div className="row align-items-center mt-3 gx-2 justify-content-center">
-        <div className="col-md-2">
+        {/* <div className="col-md-2">
           <input
             type="text"
             placeholder="Search..."
@@ -334,6 +334,20 @@ const Transactiondetails = () => {
             onChange={handleSearch}
             className="form-control"
           />
+        </div> */}
+        <div className="col-md-2">
+          <div className="input-group">
+            <span className="input-group-text bg-white border-end-0">
+              <i className="fa fa-search text-muted" />
+            </span>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchText}
+              onChange={handleSearch}
+              className="form-control border-start-0 custom-input"
+            />
+          </div>
         </div>
 
         <div className="col-md-2">
@@ -362,7 +376,7 @@ const Transactiondetails = () => {
           <select
             value={filterScheme}
             onChange={handleSchemeFilter}
-            className="form-control"
+            className="form-control custom-dropdown"
           >
             <option value="">All Schemes</option>
             {Array.from(new Set(excelData.map((row) => row["Scheme"])))

@@ -134,3 +134,7 @@ input[type="file"] {
   background-color: #50698d !important;
   color: white !important;
 }
+.custom-input:focus {
+  border-color: #ced4da !important; /* Light gray */
+  box-shadow: none !important; /* Remove blue glow */
+}
