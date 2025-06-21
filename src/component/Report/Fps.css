@@ -82,3 +82,12 @@ input:focus,
   border: 1px solid #ced4da;
   border-radius: 4px;
 }
+.badge-custom {
+  display: inline-block;
+  background-color: #50698d; /* Bootstrap primary blue */
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+}

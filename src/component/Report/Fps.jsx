@@ -255,7 +255,7 @@ const Fps = () => {
             </span>
             <input
               type="text"
-              placeholder="Search by Name, Scheme, etc."
+              placeholder="Search..."
               value={searchText}
               onChange={handleSearch}
               className="form-control custom-search-input"
@@ -397,8 +397,10 @@ const Fps = () => {
           </div>
         </div>
       )}
-      <div className="text-end fw-bold mt-3">
-        Total Members: {filteredData.length}
+      <div className="text-end mt-3 mb-2">
+        <span className="badge-custom">
+          Total Members: {filteredData.length}
+        </span>
       </div>
     </div>
   );
