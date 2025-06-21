@@ -33,21 +33,58 @@ const Fps = () => {
       let currentScheme = "";
       const dataRows = [];
 
+      let currentRow = null;
+      let currentNames = [];
+
       jsonData.forEach((row) => {
+        // Detect scheme name rows
         if (typeof row[0] === "string" && row[0].startsWith("Scheme Name")) {
           const match = row[0].match(/Scheme Name\s*:\s*(.*?)\s*(\[|$)/);
           if (match) {
             currentScheme = match[1].trim();
           }
-        } else if (typeof row[0] === "number" && row.length >= 7) {
-          dataRows.push({
+        }
+        // Main row with S.No (new group starts)
+        else if (typeof row[0] === "number" && row.length >= 7) {
+          // If previous group exists, push the parent with count
+          if (currentRow && currentNames.length > 0) {
+            dataRows.push({
+              ...currentRow,
+              "Name Count": currentNames.length,
+            });
+          }
+
+          // Start new group
+          currentRow = {
             "S.No": row[0],
             "Ration Card No": row[1],
-            "Member Name(in Eng)": row[6],
+            "Member Name(in Eng)": row[6]?.toString().trim() || "",
             Scheme: currentScheme,
-          });
+          };
+
+          currentNames = [];
+
+          if (row[6]) {
+            currentNames.push(row[6].toString().trim());
+          }
+        }
+
+        // Sub-rows with only additional member names
+        else if (!row[0] && row.length >= 7) {
+          const name = row[6]?.toString().trim();
+          if (name) {
+            currentNames.push(name);
+          }
         }
       });
+
+      // Push the last group
+      if (currentRow && currentNames.length > 0) {
+        dataRows.push({
+          ...currentRow,
+          "Name Count": currentNames.length,
+        });
+      }
 
       setExcelData(dataRows);
       setFilteredData(dataRows);
@@ -288,6 +325,7 @@ const Fps = () => {
                 <th>S.No</th>
                 <th>Ration Card No</th>
                 <th>Member Name (Eng)</th>
+                <th>Family Member</th>
                 <th>Scheme</th>
               </tr>
             </thead>
@@ -298,13 +336,14 @@ const Fps = () => {
                     <td>{row["S.No"]}</td>
                     <td>{row["Ration Card No"]}</td>
                     <td>{row["Member Name(in Eng)"]}</td>
+                    <td>{row["Name Count"]}</td>
                     <td>{row["Scheme"]}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="5"
                     style={{
                       textAlign: "center",
                       padding: "20px",
