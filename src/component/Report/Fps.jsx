@@ -215,7 +215,7 @@ const Fps = () => {
             flex: 1,
           }}
         >
-          Transaction Details for FPS
+          FPS - D1
         </span>
         <div style={{ display: "flex", gap: "10px" }}>
           <label
