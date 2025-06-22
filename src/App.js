@@ -18,18 +18,28 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const auth = localStorage.getItem("isAuthenticated");
-    if (auth === "true") {
+    const expiry = localStorage.getItem("authExpiry");
+
+    if (auth === "true" && expiry && parseInt(expiry) > new Date().getTime()) {
       setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("authExpiry");
+      toast.warning("Session expired. Please contact admin to reset password.");
     }
+
     setLoading(false);
   }, []);
 
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "#w@seem123#") {
       setIsAuthenticated(true);
+      const expiryTime = new Date().getTime() + 1000 * 60 * 30; // 30 minutes
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("authExpiry", expiryTime.toString());
 
       toast.success("Login Successful!", {
         className: "custom-toast",
@@ -78,6 +88,7 @@ function App() {
       });
     }
   };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("isAuthenticated");
@@ -108,7 +119,15 @@ function App() {
             isAuthenticated ? (
               <Navigate to="/dashboard" />
             ) : (
-              <LoginPage onLogin={handleLogin} />
+              <LoginPage
+                onLogin={handleLogin}
+                expired={
+                  !isAuthenticated &&
+                  localStorage.getItem("authExpiry") &&
+                  parseInt(localStorage.getItem("authExpiry")) <
+                    new Date().getTime()
+                }
+              />
             )
           }
         />
