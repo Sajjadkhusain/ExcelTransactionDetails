@@ -35,10 +35,9 @@ const Loginpage = ({ onLogin }) => {
               required
             />
           </div>
-
           <div className="input-group mb-3">
             <span className="input-group-text">
-              <i className="bi bi-lock-fill icon-color"></i>
+              <i className="bi bi-lock-fill" style={{ color: "#50698d" }}></i>
             </span>
             <input
               type={showPassword ? "text" : "password"}
@@ -48,18 +47,24 @@ const Loginpage = ({ onLogin }) => {
               className="form-control"
               required
             />
-            <button
-              className="btn btn-outline-secondary eye-icon"
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <i
-                className={`bi ${
-                  showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"
-                }`}
-                style={{ color: "#50698d" }}
-              ></i>
-            </button>
+            {password && (
+              <button
+                className="btn btn-outline-secondary border-start-0"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  backgroundColor: "transparent",
+                  borderColor: "#ced4da",
+                  color: "#50698d",
+                }}
+              >
+                <i
+                  className={`bi ${
+                    showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"
+                  }`}
+                ></i>
+              </button>
+            )}
           </div>
           <button
             type="submit"
