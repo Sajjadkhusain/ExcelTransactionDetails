@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-
+import "./Login.css";
 const Loginpage = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,22 +22,45 @@ const Loginpage = ({ onLogin }) => {
           />
         </div>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="form-control mb-3"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control mb-3"
-            required
-          />
+          <div className="input-group mb-3">
+            <span className="input-group-text">
+              <i className="bi bi-person-fill icon-color"></i>{" "}
+            </span>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+
+          <div className="input-group mb-3">
+            <span className="input-group-text">
+              <i className="bi bi-lock-fill icon-color"></i>
+            </span>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+              required
+            />
+            <button
+              className="btn btn-outline-secondary eye-icon"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              <i
+                className={`bi ${
+                  showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"
+                }`}
+                style={{ color: "#50698d" }}
+              ></i>
+            </button>
+          </div>
           <button
             type="submit"
             className="btn w-100"
