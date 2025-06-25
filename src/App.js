@@ -27,7 +27,7 @@ function App() {
   }, []);
 
   const handleLogin = (username, password) => {
-    if (username === "admin" && password === "#w@seem123#") {
+    if (username === "admin" && password === "#kh@n123#") {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
 
