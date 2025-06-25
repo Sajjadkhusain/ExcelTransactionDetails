@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import "./Login.css";
+
 const Loginpage = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin(username, password);
+    setIsLoading(true);
+
+    // Simulate 2 seconds loading before calling onLogin
+    setTimeout(() => {
+      onLogin(username, password);
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (
@@ -24,7 +32,7 @@ const Loginpage = ({ onLogin }) => {
         <form onSubmit={handleSubmit}>
           <div className="input-group mb-3">
             <span className="input-group-text">
-              <i className="bi bi-person-fill icon-color"></i>{" "}
+              <i className="bi bi-person-fill icon-color"></i>
             </span>
             <input
               type="text"
@@ -33,6 +41,7 @@ const Loginpage = ({ onLogin }) => {
               onChange={(e) => setUsername(e.target.value)}
               className="form-control"
               required
+              disabled={isLoading}
             />
           </div>
           <div className="input-group mb-3">
@@ -46,6 +55,7 @@ const Loginpage = ({ onLogin }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="form-control"
               required
+              disabled={isLoading}
             />
             {password && (
               <button
@@ -57,6 +67,7 @@ const Loginpage = ({ onLogin }) => {
                   borderColor: "#ced4da",
                   color: "#50698d",
                 }}
+                disabled={isLoading}
               >
                 <i
                   className={`bi ${
@@ -68,10 +79,32 @@ const Loginpage = ({ onLogin }) => {
           </div>
           <button
             type="submit"
-            className="btn w-100"
-            style={{ backgroundColor: "#50698d", color: "#fff" }}
+            className="btn w-100 login-button"
+            style={{
+              backgroundColor: "#50698d",
+              color: "#fff",
+              height: "38px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              position: "relative",
+              transition: "all 0.3s ease",
+            }}
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <>
+                <span className="fancy-spinner">
+                  <span className="spinner-dot"></span>
+                  <span className="spinner-dot"></span>
+                  <span className="spinner-dot"></span>
+                </span>
+                {/* Logging in... */}
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>
