@@ -14,6 +14,7 @@ import Header from "./component/Header/Header";
 import Footer from "./component/Footer/Footer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import StockRajester from "./component/StockData/StockRajester";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,7 +29,7 @@ function App() {
 
   const handleLogin = (username, password) => {
     /*#w@seem123#*/
-    if (username === "admin" && password === "#kh@n123#") {
+    if (username === "admin" && password === "#kh@n!23#") {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
 
@@ -143,6 +144,18 @@ function App() {
             isAuthenticated ? (
               <ProtectedLayout>
                 <Fps />
+              </ProtectedLayout>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/stock-rajester"
+          element={
+            isAuthenticated ? (
+              <ProtectedLayout>
+                <StockRajester />
               </ProtectedLayout>
             ) : (
               <Navigate to="/" />

@@ -35,6 +35,9 @@ const Header = ({ onLogout }) => {
               Reports
             </button>
             <div className={`dropdown-menu ${showDropdown ? "show" : ""}`}>
+              <Link to="/stock-rajester" className="dropdown-item">
+                Stock Rajester
+              </Link>
               <Link to="/transactions" className="dropdown-item">
                 Transactions
               </Link>
