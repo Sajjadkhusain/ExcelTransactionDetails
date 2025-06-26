@@ -162,9 +162,9 @@ function StockRajester() {
     setFormData((prev) => ({
       ...prev,
       openingBalance: lastEntry ? lastEntry.closeBalance : "",
-      shopkeeperName: "",
-      machineNumber: "",
-      villageName: "",
+      shopkeeperName: lastEntry ? lastEntry.shopkeeperName : "",
+      machineNumber: lastEntry ? lastEntry.machineNumber : "",
+      villageName: lastEntry ? lastEntry.villageName : "",
       taluka: "Barshitakli",
       parker: null,
       month: "",
@@ -180,68 +180,6 @@ function StockRajester() {
     setEditingIndex(null);
   };
 
-  // const handlePrint = () => {
-  //   if (entries.length === 0) return;
-
-  //   const printContent = `
-  //     <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;">
-  //       <thead>
-  //         <tr>
-  //           <th>No.</th>
-  //           <th>Shopkeeper</th>
-  //           <th>Machine No</th>
-  //           <th>Village</th>
-  //           <th>Date</th>
-  //           <th>Opening Bal</th>
-  //           <th>Close Bal</th>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         ${entries
-  //           .map(
-  //             (entry, index) => `
-  //           <tr>
-  //             <td>${index + 1}</td>
-  //             <td>${entry.shopkeeperName}</td>
-  //             <td>${entry.machineNumber}</td>
-  //             <td>${entry.villageName}</td>
-  //             <td>${entry.date}</td>
-  //             <td>${entry.openingBalance}</td>
-  //             <td>${entry.closeBalance}</td>
-  //           </tr>
-  //         `
-  //           )
-  //           .join("")}
-  //       </tbody>
-  //     </table>
-  //     <div style="margin-top: 20px; text-align: right; font-weight: bold;">
-  //       Total Records: ${entries.length}
-  //     </div>
-  //   `;
-
-  //   const printWindow = window.open("", "", "width=900,height=700");
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Stock Register</title>
-  //         <style>
-  //           body { font-family: Arial, sans-serif; padding: 20px; }
-  //           table { width: 100%; border-collapse: collapse; }
-  //           th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-  //           th { background-color: #f2f2f2; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <h2 style="text-align: center;">Stock Register Report</h2>
-  //         ${printContent}
-  //       </body>
-  //     </html>
-  //   `);
-  //   printWindow.document.close();
-  //   printWindow.focus();
-  //   printWindow.print();
-  //   printWindow.close();
-  // };
   const handlePrint = () => {
     if (entries.length === 0) return;
 
@@ -385,7 +323,7 @@ function StockRajester() {
             fontWeight: "bold",
             textAlign: "center",
             flex: 1,
-            textDecoration: "underline",
+            // textDecoration: "underline",
             textDecorationColor: "#50698d", // Optional: set underline color
             textDecorationThickness: "2px", // Optional: set underline thickness
           }}
@@ -401,7 +339,7 @@ function StockRajester() {
               }}
               className="btn"
               // disabled={currentItems.length === 0}
-              title="Add"
+              title="Back to list"
               style={{
                 borderRadius: "50%",
                 backgroundColor: "#50698d",
@@ -477,7 +415,9 @@ function StockRajester() {
               {/* Row 1 */}
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Shopkeeper Name</label>
+                  <label className="form-label lblName">
+                    Shopkeeper Name (रास्तभाव दुकानदाराचे नाव)
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -490,7 +430,9 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Machine Number</label>
+                  <label className="form-label lblName">
+                    Machine Number (पॉस मशीन न)
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -503,7 +445,9 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Village Name</label>
+                  <label className="form-label lblName">
+                    Village Name (गाव)
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -518,7 +462,7 @@ function StockRajester() {
               {/* Row 2 */}
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Taluka</label>
+                  <label className="form-label lblName">Taluka (तालुका)</label>
                   <input
                     type="text"
                     className="form-control"
@@ -531,17 +475,9 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Parker</label>
-                  {/* <Select
-                    value={formData.parker}
-                    onChange={handleParkerChange}
-                    options={parkerOptions}
-                    isSearchable={true}
-                    placeholder="Select Parker..."
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                  /> */}
-
+                  <label className="form-label lblName">
+                    Schemes (धान्याचे प्रकार)
+                  </label>
                   <Select
                     value={formData.parker}
                     onChange={handleParkerChange}
@@ -573,7 +509,7 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Month</label>
+                  <label className="form-label lblName">Month (महिना)</label>
                   <input
                     type="text"
                     className="form-control"
@@ -588,7 +524,7 @@ function StockRajester() {
               {/* Row 3 */}
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Date</label>
+                  <label className="form-label lblName">Date (दिनांक)</label>
                   <input
                     type="date"
                     className="form-control"
@@ -601,7 +537,9 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Opening Balance</label>
+                  <label className="form-label lblName">
+                    Opening Balance (पूर्वीची शिल्लक)
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -616,7 +554,7 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Aawak</label>
+                  <label className="form-label lblName">Income (आवक)</label>
                   <input
                     type="text"
                     className="form-control"
@@ -632,7 +570,7 @@ function StockRajester() {
               {/* Row 4 */}
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Total</label>
+                  <label className="form-label lblName">Total (एकूण)</label>
                   <input
                     type="text"
                     className="form-control"
@@ -645,7 +583,7 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Sale</label>
+                  <label className="form-label lblName">Sale (विक्री)</label>
                   <input
                     type="text"
                     className="form-control"
@@ -659,7 +597,9 @@ function StockRajester() {
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Close Balance</label>
+                  <label className="form-label lblName">
+                    Close Balance (शिल्लक)
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -678,7 +618,7 @@ function StockRajester() {
             <div className="row">
               <div className="col-md-12 mb-3">
                 <div className="form-group">
-                  <label className="form-label lblName">Remark</label>
+                  <label className="form-label lblName">Remark (शेरा)</label>
                   <textarea
                     className="form-control"
                     rows="3"
@@ -757,15 +697,23 @@ function StockRajester() {
                       <td>
                         <button
                           onClick={() => handleEdit(index)}
-                          className="btn btn-sm btn-primary me-2"
+                          className="btn"
+                          title="Edit"
                         >
-                          <i className="fa fa-edit"></i>
+                          <i
+                            className="fa fa-edit"
+                            style={{ color: "#50698d", fontSize: "20px" }}
+                          ></i>
                         </button>
                         <button
                           onClick={() => handleDelete(index)}
-                          className="btn btn-sm btn-danger"
+                          className="btn"
+                          title="Delete"
                         >
-                          <i className="fa fa-trash"></i>
+                          <i
+                            className="fa fa-trash"
+                            style={{ color: "#50698d", fontSize: "20px" }}
+                          ></i>
                         </button>
                       </td>
                     </tr>
