@@ -1,7 +1,22 @@
-.lblName {
-  text-align: left;
-  display: block;
-  font-weight: bold;
-  font-size: 15px;
-  font-family: Arial, Helvetica, sans-serif;
+/* Ensure table cells have consistent height */
+.table td,
+.table th {
+  vertical-align: middle;
+  min-width: 100px;
+}
+
+/* Make action buttons more compact */
+.btn-sm.p-1 {
+  padding: 0.15rem 0.35rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+  .form-control-sm {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.8rem;
+  }
 }

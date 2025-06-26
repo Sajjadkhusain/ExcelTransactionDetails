@@ -1,309 +1,247 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Stock.css";
-import Select from "react-select";
-function StockRajester() {
-  const [entries, setEntries] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [showForm, setShowForm] = useState(false);
 
-  const [formData, setFormData] = useState({
-    shopkeeperName: "",
-    machineNumber: "",
-    villageName: "",
-    taluka: "Barshitakli", // Default value
-    parker: null,
-    month: "",
-    date: "",
-    openingBalance: "",
-    aawak: "",
-    total: "",
-    sale: "",
-    closeBalance: "",
-    remark: "",
-  });
-
-  const [parkerOptions] = useState([
-    { value: "phh_wheat", label: "PHH WHEAT" },
-    { value: "phh_rice ", label: "PHH RICE" },
-    { value: "phh_jwari", label: "PHH JWARI" },
-    { value: "aay_wheat", label: "AAY WHEAT" },
-    { value: "aay_rice", label: "AAY RICE" },
-    { value: "aay_jwari", label: "AAY JWARI" },
-    { value: "sugar", label: "SUGAR" },
+const StockRajester = () => {
+  const [rows, setRows] = useState([
+    {
+      id: 1,
+      srNo: 1,
+      date: "",
+      openingBal: "",
+      aawak: "",
+      total: "",
+      sale: "",
+      closeBalance: "",
+      remark: "",
+    },
   ]);
 
-  useEffect(() => {
-    const savedData = localStorage.getItem("stockRegisterEntries");
-    if (savedData) {
-      setEntries(JSON.parse(savedData));
+  const [editingId, setEditingId] = useState(null);
+
+  // Helper function to format numbers to 2 decimal places
+  const formatNumber = (value) => {
+    if (value === "" || isNaN(value)) return "";
+    const num = parseFloat(value);
+    return num.toFixed(2);
+  };
+
+  const handleInputChange = (id, field, value) => {
+    // Limit to 2 decimal places for numeric fields
+    if (["openingBal", "aawak", "sale"].includes(field)) {
+      if (value.includes(".") && value.split(".")[1].length > 2) {
+        value = parseFloat(value).toFixed(2);
+      }
     }
-  }, []);
 
-  useEffect(() => {
-    localStorage.setItem("stockRegisterEntries", JSON.stringify(entries));
-  }, [entries]);
+    const updatedRows = rows.map((row) => {
+      if (row.id === id) {
+        const updatedRow = { ...row, [field]: value };
 
-  useEffect(() => {
-    const opening = parseFloat(formData.openingBalance) || 0;
-    const aawak = parseFloat(formData.aawak) || 0;
-    const total = (opening + aawak).toFixed(2);
+        // Auto-calculate total when openingBal or aawak changes
+        if (field === "openingBal" || field === "aawak") {
+          const opening = parseFloat(updatedRow.openingBal) || 0;
+          const aawak = parseFloat(updatedRow.aawak) || 0;
+          updatedRow.total = (opening + aawak).toFixed(2);
+        }
 
-    setFormData((prev) => ({
-      ...prev,
-      total: total === "0.00" ? "" : total,
-    }));
-  }, [formData.openingBalance, formData.aawak]);
+        // Auto-calculate closeBalance when total or sale changes
+        if (field === "total" || field === "sale") {
+          const total = parseFloat(updatedRow.total) || 0;
+          const sale = parseFloat(updatedRow.sale) || 0;
+          updatedRow.closeBalance = (total - sale).toFixed(2);
+        }
 
-  useEffect(() => {
-    const total = parseFloat(formData.total) || 0;
-    const sale = parseFloat(formData.sale) || 0;
-    const closeBalance = (total - sale).toFixed(2);
+        return updatedRow;
+      }
+      return row;
+    });
 
-    setFormData((prev) => ({
-      ...prev,
-      closeBalance: closeBalance === "0.00" ? "" : closeBalance,
-    }));
-  }, [formData.total, formData.sale]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setRows(updatedRows);
   };
 
-  const handleNumberChange = (e) => {
-    const { name, value } = e.target;
-    if (/^\d*\.?\d{0,2}$/.test(value) || value === "") {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleEdit = (id) => {
+    setEditingId(id);
+  };
+
+  const handleSubmit = (id) => {
+    setEditingId(null);
+    const currentRowIndex = rows.findIndex((row) => row.id === id);
+    const isLastRow = id === rows[rows.length - 1].id;
+
+    if (
+      isLastRow &&
+      rows[currentRowIndex].date &&
+      rows[currentRowIndex].openingBal
+    ) {
+      // Get the close balance from current row to use as next row's opening balance
+      const nextOpeningBal = rows[currentRowIndex].closeBalance || "0.00";
+
+      setRows([
+        ...rows,
+        {
+          id: rows.length + 1,
+          srNo: rows.length + 1,
+          date: "",
+          openingBal: nextOpeningBal,
+          aawak: "",
+          total: nextOpeningBal,
+          sale: "",
+          closeBalance: nextOpeningBal,
+          remark: "",
+        },
+      ]);
     }
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    if (value && !isNaN(value)) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: parseFloat(value).toFixed(2),
-      }));
+  const handleDelete = (id) => {
+    const rowIndex = rows.findIndex((row) => row.id === id);
+    const updatedRows = rows
+      .filter((row) => row.id !== id)
+      .map((row, index) => ({ ...row, srNo: index + 1 }));
+
+    if (rowIndex < updatedRows.length && rowIndex > 0) {
+      updatedRows[rowIndex].openingBal =
+        updatedRows[rowIndex - 1].closeBalance || "0.00";
+      updatedRows[rowIndex].total = updatedRows[rowIndex].openingBal;
+    }
+
+    setRows(updatedRows);
+
+    if (editingId === id) {
+      setEditingId(null);
     }
   };
 
-  const handleParkerChange = (selectedOption) => {
-    setFormData((prev) => ({ ...prev, parker: selectedOption }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newEntry = {
-      ...formData,
-      // Convert parker object to string for display
-      parker: formData.parker ? formData.parker.label : "",
+  // Calculate totals for the summary row
+  const calculateTotals = () => {
+    const totals = {
+      openingBal: 0,
+      aawak: 0,
+      total: 0,
+      sale: 0,
+      closeBalance: 0,
     };
 
-    if (editingIndex !== null) {
-      // Update existing entry
-      const updatedEntries = [...entries];
-      updatedEntries[editingIndex] = newEntry;
-      setEntries(updatedEntries);
-    } else {
-      // Add new entry
-      setEntries([...entries, newEntry]);
-    }
-
-    // Reset form
-    setFormData({
-      shopkeeperName: "",
-      machineNumber: "",
-      villageName: "",
-      taluka: "Barshitakli",
-      parker: null,
-      month: "",
-      date: "",
-      openingBalance:
-        entries.length > 0 ? entries[entries.length - 1].closeBalance : "",
-      aawak: "",
-      total: "",
-      sale: "",
-      closeBalance: "",
-      remark: "",
+    rows.forEach((row) => {
+      totals.openingBal += parseFloat(row.openingBal) || 0;
+      totals.aawak += parseFloat(row.aawak) || 0;
+      totals.total += parseFloat(row.total) || 0;
+      totals.sale += parseFloat(row.sale) || 0;
+      totals.closeBalance += parseFloat(row.closeBalance) || 0;
     });
 
-    setEditingIndex(null);
-    setShowForm(false);
+    return totals;
   };
 
-  const handleEdit = (index) => {
-    const entryToEdit = entries[index];
-    const parkerOption = parkerOptions.find(
-      (option) => option.label === entryToEdit.parker
-    );
-
-    setFormData({
-      ...entryToEdit,
-      parker: parkerOption || null,
-    });
-
-    setEditingIndex(index);
-    setShowForm(true);
-  };
-
-  const handleDelete = (index) => {
-    const updatedEntries = entries.filter((_, i) => i !== index);
-    setEntries(updatedEntries);
-    if (editingIndex === index) {
-      setEditingIndex(null);
-      setShowForm(false);
-    }
-  };
-
-  const handleAdd = () => {
-    const lastEntry = entries.length > 0 ? entries[entries.length - 1] : null;
-
-    setFormData((prev) => ({
-      ...prev,
-      openingBalance: lastEntry ? lastEntry.closeBalance : "",
-      shopkeeperName: lastEntry ? lastEntry.shopkeeperName : "",
-      machineNumber: lastEntry ? lastEntry.machineNumber : "",
-      villageName: lastEntry ? lastEntry.villageName : "",
-      taluka: "Barshitakli",
-      parker: null,
-      month: "",
-      date: "",
-      aawak: "",
-      total: "",
-      sale: "",
-      closeBalance: "",
-      remark: "",
-    }));
-
-    setShowForm(true);
-    setEditingIndex(null);
-  };
+  const totals = calculateTotals();
 
   const handlePrint = () => {
-    if (entries.length === 0) return;
+    if (rows.length === 0) return;
 
     // Get current date for the report header
     const currentDate = new Date().toLocaleDateString();
 
     // Create print content with enhanced header
-    //  //  <p style="margin: 2px 0;"><strong>:</strong> ${currentDate}</p>
     const printContent = `
-    <div style="margin-bottom: 20px; text-align: center;">
-      <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-        <div style="text-align: left;">
-          <p style="margin: 2px 0;"><strong>Shopkeeper Name:</strong> ${
-            entries[0]?.shopkeeperName || "N/A"
-          }</p>
-           <p style="margin: 2px 0;"><strong>Village Name:</strong> ${
-             entries[0]?.villageName || "N/A"
-           }</p>
-            <p style="margin: 2px 0;"><strong>Schemes:</strong> ${
-              entries[0]?.parker || "N/A"
-            }</p>
-          
-         
-        </div>
-        <div style="text-align: right;">
-         <p style="margin: 2px 0;"><strong>Machine Number:</strong> ${
-           entries[0]?.machineNumber || "N/A"
-         }</p>
-
-          <p style="margin: 2px 0;"><strong>Taluka:</strong> ${
-            entries[0]?.taluka || "N/A"
-          }</p>
-         
-          <p style="margin: 2px 0;"><strong>Month:</strong> ${
-            entries[0]?.month || "N/A"
-          }</p>
-        </div>
+      <div style="margin-bottom: 20px; text-align: center;">
+        <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+        <p style="margin: 2px 0;"><strong>Report Date:</strong> ${currentDate}</p>
       </div>
-    </div>
 
-    <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th>Date</th>
-          <th>Opening Bal</th>
-          <th>Aawak</th>
-          <th>Total</th>
-          <th>Sale</th>
-          <th>Close Bal</th>
-          <th>Remark</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${entries
-          .map(
-            (entry, index) => `
+      <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+        <thead>
           <tr>
-            <td>${index + 1}</td>
-            <td>${entry.date || "-"}</td>
-            <td>${entry.openingBalance || "0.00"}</td>
-            <td>${entry.aawak || "0.00"}</td>
-            <td>${entry.total || "0.00"}</td>
-            <td>${entry.sale || "0.00"}</td>
-            <td>${entry.closeBalance || "0.00"}</td>
-            <td>${entry.remark || "-"}</td>
+            <th>Sr No</th>
+            <th>Date</th>
+            <th>Opening Bal</th>
+            <th>Aawak</th>
+            <th>Total</th>
+            <th>Sale</th>
+            <th>Close Balance</th>
+            <th>Remark</th>
           </tr>
-        `
-          )
-          .join("")}
-      </tbody>
-    </table>
-
-  `;
+        </thead>
+        <tbody>
+          ${rows
+            .map(
+              (row) => `
+            <tr>
+              <td>${row.srNo}</td>
+              <td>${row.date || "-"}</td>
+              <td>${row.openingBal ? formatNumber(row.openingBal) : "0.00"}</td>
+              <td>${row.aawak ? formatNumber(row.aawak) : "0.00"}</td>
+              <td>${row.total ? formatNumber(row.total) : "0.00"}</td>
+              <td>${row.sale ? formatNumber(row.sale) : "0.00"}</td>
+              <td>${
+                row.closeBalance ? formatNumber(row.closeBalance) : "0.00"
+              }</td>
+              <td>${row.remark || "-"}</td>
+            </tr>
+          `
+            )
+            .join("")}
+          <tr style="font-weight: bold;">
+            <td colspan="2">Totals</td>
+            <td>${formatNumber(totals.openingBal)}</td>
+            <td>${formatNumber(totals.aawak)}</td>
+            <td>${formatNumber(totals.total)}</td>
+            <td>${formatNumber(totals.sale)}</td>
+            <td>${formatNumber(totals.closeBalance)}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
 
     const printWindow = window.open("", "", "width=1000,height=700");
     printWindow.document.write(`
-    <html>
-      <head>
-        <title>Stock Register Report</title>
-        <style>
-          body { 
-            font-family: Arial, sans-serif; 
-            padding: 25px; 
-            color: #333;
-          }
-          table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-bottom: 15px;
-          }
-          th, td { 
-            border: 1px solid #000; 
-            padding: 8px; 
-            text-align: center; 
-          }
-          th { 
-            background-color: #f2f2f2; 
-            font-weight: bold;
-          }
-          h2 {
-            color: #50698d;
-            margin-top: 0;
-          }
-          @media print {
-            body { padding: 0; }
-            @page { size: auto; margin: 10mm; }
-          }
-        </style>
-      </head>
-      <body>
-        ${printContent}
-        <script>
-          setTimeout(function() {
-            window.print();
-            window.close();
-          }, 200);
-        </script>
-      </body>
-    </html>
-  `);
+      <html>
+        <head>
+          <title>Stock Register Report</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              padding: 25px; 
+              color: #333;
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse; 
+              margin-bottom: 15px;
+            }
+            th, td { 
+              border: 1px solid #000; 
+              padding: 8px; 
+              text-align: center; 
+            }
+            th { 
+              background-color: #f2f2f2; 
+              font-weight: bold;
+            }
+            h2 {
+              color: #50698d;
+              margin-top: 0;
+            }
+            @media print {
+              body { padding: 0; }
+              @page { size: auto; margin: 10mm; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent}
+          <script>
+            setTimeout(function() {
+              window.print();
+              window.close();
+            }, 200);
+          </script>
+        </body>
+      </html>
+    `);
     printWindow.document.close();
   };
+
   return (
     <div className="container text-center card">
       <div
@@ -316,422 +254,244 @@ function StockRajester() {
           position: "relative",
         }}
       >
-        <div style={{ width: "80px" }}></div>
         <span
           style={{
             fontSize: "20px",
             fontWeight: "bold",
             textAlign: "center",
             flex: 1,
-            // textDecoration: "underline",
-            textDecorationColor: "#50698d", // Optional: set underline color
-            textDecorationThickness: "2px", // Optional: set underline thickness
+            textDecorationColor: "#50698d",
+            textDecorationThickness: "2px",
           }}
         >
           Stock Register
         </span>
-        {showForm ? (
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => {
-                setShowForm(false);
-                setEditingIndex(null);
-              }}
-              className="btn"
-              // disabled={currentItems.length === 0}
-              title="Back to list"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
-            </button>
-          </div>
-        ) : (
-          ""
-        )}
-
-        {!showForm ? (
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={handleAdd}
-              className="btn"
-              // disabled={currentItems.length === 0}
-              title="Add"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-plus" aria-hidden="true"></i>
-            </button>
-
-            <button
-              onClick={handlePrint}
-              className="btn"
-              // disabled={currentItems.length === 0}
-              title="Print"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-print" aria-hidden="true"></i>
-            </button>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
-      {showForm ? (
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              {/* Row 1 */}
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Shopkeeper Name (रास्तभाव दुकानदाराचे नाव)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="shopkeeperName"
-                    value={formData.shopkeeperName}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Machine Number (पॉस मशीन न)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="machineNumber"
-                    value={formData.machineNumber}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Village Name (गाव)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="villageName"
-                    value={formData.villageName}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Row 2 */}
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Taluka (तालुका)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="taluka"
-                    value={formData.taluka}
-                    onChange={handleChange}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Schemes (धान्याचे प्रकार)
-                  </label>
-                  <Select
-                    value={formData.parker}
-                    onChange={handleParkerChange}
-                    options={parkerOptions}
-                    isSearchable={true}
-                    placeholder="Select Parker..."
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    styles={{
-                      singleValue: (provided) => ({
-                        ...provided,
-                        textAlign: "left", // Left-align selected value
-                      }),
-                      placeholder: (provided) => ({
-                        ...provided,
-                        textAlign: "left", // Left-align placeholder
-                      }),
-                      option: (provided) => ({
-                        ...provided,
-                        textAlign: "left", // Left-align dropdown options
-                      }),
-                      control: (provided) => ({
-                        ...provided,
-                        textAlign: "left", // Left-align text in control
-                      }),
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Month (महिना)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="month"
-                    value={formData.month}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Row 3 */}
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Date (दिनांक)</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Opening Balance (पूर्वीची शिल्लक)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="openingBalance"
-                    value={formData.openingBalance}
-                    onChange={handleNumberChange}
-                    onBlur={handleBlur}
-                    inputMode="decimal"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Income (आवक)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="aawak"
-                    value={formData.aawak}
-                    onChange={handleNumberChange}
-                    onBlur={handleBlur}
-                    inputMode="decimal"
-                  />
-                </div>
-              </div>
-
-              {/* Row 4 */}
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Total (एकूण)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="total"
-                    disabled
-                    value={formData.total}
-                    inputMode="decimal"
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Sale (विक्री)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="sale"
-                    value={formData.sale}
-                    onChange={handleNumberChange}
-                    onBlur={handleBlur}
-                    inputMode="decimal"
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Close Balance (शिल्लक)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="closeBalance"
-                    value={formData.closeBalance}
-                    onChange={handleNumberChange}
-                    onBlur={handleBlur}
-                    inputMode="decimal"
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Remark Textarea */}
-            <div className="row">
-              <div className="col-md-12 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Remark (शेरा)</label>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    name="remark"
-                    value={formData.remark}
-                    onChange={handleChange}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="d-flex justify-content-center gap-2 mb-3">
-              <button
-                type="button"
-                className="btn"
-                style={{ backgroundColor: "#50698d", color: "#fff" }}
-                onClick={() => {
-                  setShowForm(false);
-                  setEditingIndex(null);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn "
-                style={{ backgroundColor: "#50698d", color: "#fff" }}
-              >
-                {editingIndex !== null ? "Update" : "Submit"}
-              </button>
-            </div>
-          </form>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={handlePrint}
+            className="btn"
+            disabled={rows.length === 0}
+            title="Print"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#50698d",
+              color: "#fff",
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 0,
+            }}
+          >
+            <i className="fa fa-print" aria-hidden="true"></i>
+          </button>
         </div>
-      ) : (
-        <div className="card mt-4" id="printable-table">
-          <div className="card-body p-0">
+      </div>
+      <div className="card mt-4" id="printable-table">
+        <div className="card-body p-0">
+          <div className="table-responsive">
             <table className="table table-bordered table-striped mb-0">
               <thead className="table-light">
                 <tr>
-                  <th className="headerColor">Sr No</th>
-                  {/*<th className="headerColor">Shopkeeper</th>
-                  <th className="headerColor">Machine No</th>
-                  <th className="headerColor">Village Name</th>
-                  <th className="headerColor">Taluka</th>
-                  <th className="headerColor">Parker</th>
-                  <th className="headerColor">Month</th> */}
-                  <th className="headerColor">Date</th>
-                  <th className="headerColor">Opening Bal</th>
-                  <th className="headerColor">Aawak</th>
-                  <th className="headerColor">Total</th>
-                  <th className="headerColor">Sale</th>
-                  <th className="headerColor">Close Balance</th>
-                  <th className="headerColor">Remark</th>
-                  <th className="headerColor">Actions</th>
+                  <th className="headerColor text-center align-middle">
+                    Sr No
+                  </th>
+                  <th className="headerColor text-center align-middle">Date</th>
+                  <th className="headerColor text-center align-middle">
+                    Opening Bal
+                  </th>
+                  <th className="headerColor text-center align-middle">
+                    Aawak
+                  </th>
+                  <th className="headerColor text-center align-middle">
+                    Total
+                  </th>
+                  <th className="headerColor text-center align-middle">Sale</th>
+                  <th className="headerColor text-center align-middle">
+                    Close Balance
+                  </th>
+                  <th className="headerColor text-center align-middle">
+                    Remark
+                  </th>
+                  <th className="headerColor text-center align-middle">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {entries.length > 0 ? (
-                  entries.map((entry, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      {/* <td>{entry.shopkeeperName}</td>
-                      <td>{entry.machineNumber}</td>
-                      <td>{entry.villageName}</td>
-                      <td>{entry.taluka}</td>
-                      <td>{entry.parker}</td>
-                      <td>{entry.month}</td> */}
-                      <td>{entry.date}</td>
-                      <td>{entry.openingBalance}</td>
-                      <td>{entry.aawak}</td>
-                      <td>{entry.total}</td>
-                      <td>{entry.sale}</td>
-                      <td>{entry.closeBalance}</td>
-                      <td>{entry.remark}</td>
-                      <td>
+                {rows.map((row) => (
+                  <tr key={row.id}>
+                    <td className="text-center align-middle">{row.srNo}</td>
+                    <td className="align-middle">
+                      {editingId === row.id ? (
+                        <input
+                          className="form-control form-control-sm"
+                          type="date"
+                          value={row.date}
+                          onChange={(e) =>
+                            handleInputChange(row.id, "date", e.target.value)
+                          }
+                        />
+                      ) : (
+                        row.date || "—"
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {editingId === row.id ? (
+                        <input
+                          className="form-control form-control-sm"
+                          type="number"
+                          step="0.01"
+                          value={row.openingBal}
+                          onChange={(e) =>
+                            handleInputChange(
+                              row.id,
+                              "openingBal",
+                              e.target.value
+                            )
+                          }
+                        />
+                      ) : row.openingBal ? (
+                        formatNumber(row.openingBal)
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {editingId === row.id ? (
+                        <input
+                          className="form-control form-control-sm"
+                          type="number"
+                          step="0.01"
+                          value={row.aawak}
+                          onChange={(e) =>
+                            handleInputChange(row.id, "aawak", e.target.value)
+                          }
+                        />
+                      ) : row.aawak ? (
+                        formatNumber(row.aawak)
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="text-center align-middle">
+                      {row.total ? formatNumber(row.total) : "—"}
+                    </td>
+                    <td className="align-middle">
+                      {editingId === row.id ? (
+                        <input
+                          className="form-control form-control-sm"
+                          type="number"
+                          step="0.01"
+                          value={row.sale}
+                          onChange={(e) =>
+                            handleInputChange(row.id, "sale", e.target.value)
+                          }
+                        />
+                      ) : row.sale ? (
+                        formatNumber(row.sale)
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="text-center align-middle">
+                      {row.closeBalance ? formatNumber(row.closeBalance) : "—"}
+                    </td>
+                    <td className="align-middle">
+                      {editingId === row.id ? (
+                        <input
+                          className="form-control form-control-sm"
+                          type="text"
+                          value={row.remark}
+                          onChange={(e) =>
+                            handleInputChange(row.id, "remark", e.target.value)
+                          }
+                        />
+                      ) : (
+                        row.remark || "—"
+                      )}
+                    </td>
+                    <td className="text-center align-middle">
+                      <div className="d-flex gap-2 justify-content-center">
+                        {editingId === row.id ? (
+                          <button
+                            onClick={() => handleSubmit(row.id)}
+                            className="btn btn-sm p-1"
+                            title="Save"
+                          >
+                            <i
+                              className="fa fa-save"
+                              style={{ color: "#50698d", fontSize: "18px" }}
+                            ></i>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleEdit(row.id)}
+                            className="btn btn-sm p-1"
+                            title="Edit"
+                          >
+                            <i
+                              className="fa fa-edit"
+                              style={{ color: "#50698d", fontSize: "18px" }}
+                            ></i>
+                          </button>
+                        )}
                         <button
-                          onClick={() => handleEdit(index)}
-                          className="btn"
-                          title="Edit"
-                        >
-                          <i
-                            className="fa fa-edit"
-                            style={{ color: "#50698d", fontSize: "20px" }}
-                          ></i>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(index)}
-                          className="btn"
+                          onClick={() => handleDelete(row.id)}
+                          className="btn btn-sm p-1"
                           title="Delete"
                         >
                           <i
                             className="fa fa-trash"
-                            style={{ color: "#50698d", fontSize: "20px" }}
+                            style={{ color: "#50698d", fontSize: "18px" }}
                           ></i>
                         </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" className="text-center py-4">
-                      No records found
+                      </div>
                     </td>
                   </tr>
-                )}
+                ))}
+                {/* Totals row */}
+                <tr className="fw-bold">
+                  <td className="text-center align-middle" colSpan="2">
+                    Totals
+                  </td>
+                  <td className="text-center align-middle">
+                    <span className="badge bg-primary">
+                      {formatNumber(totals.openingBal)}
+                    </span>
+                  </td>
+                  <td className="text-center align-middle">
+                    <span className="badge bg-primary">
+                      {formatNumber(totals.aawak)}
+                    </span>
+                  </td>
+                  <td className="text-center align-middle">
+                    <span className="badge bg-primary">
+                      {formatNumber(totals.total)}
+                    </span>
+                  </td>
+                  <td className="text-center align-middle">
+                    <span className="badge bg-primary">
+                      {formatNumber(totals.sale)}
+                    </span>
+                  </td>
+                  <td className="text-center align-middle">
+                    <span className="badge bg-primary">
+                      {formatNumber(totals.closeBalance)}
+                    </span>
+                  </td>
+                  <td colSpan="2"></td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
-      )}
+      </div>
+      <div className="mt-4"></div>
     </div>
   );
-}
+};
 
 export default StockRajester;
