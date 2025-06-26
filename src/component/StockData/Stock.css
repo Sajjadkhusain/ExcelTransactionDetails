@@ -20,3 +20,13 @@
     font-size: 0.8rem;
   }
 }
+
+.badge-custom {
+  display: inline-block;
+  background-color: #50698d;
+  color: white;
+  padding: 3px 13px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+}

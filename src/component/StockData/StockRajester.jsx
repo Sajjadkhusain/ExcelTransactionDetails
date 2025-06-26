@@ -1,32 +1,57 @@
 import React, { useState } from "react";
 import "./Stock.css";
+import Select from "react-select";
 
 const StockRajester = () => {
+  // Form state
+  const [formData, setFormData] = useState({
+    shopkeeperName: "",
+    machineNumber: "",
+    villageName: "",
+    taluka: "Barshitakli",
+    month: "",
+    managerName: "",
+    contactNumber: "",
+    parker: null,
+  });
+  console.log("testing", formData.parker);
+
+  const [parkerOptions] = useState([
+    { value: "phh_wheat", label: "PHH WHEAT" },
+    { value: "phh_rice", label: "PHH RICE" },
+    { value: "phh_jwari", label: "PHH JWARI" },
+    { value: "aay_wheat", label: "AAY WHEAT" },
+    { value: "aay_rice", label: "AAY RICE" },
+    { value: "aay_jwari", label: "AAY JWARI" },
+    { value: "sugar", label: "SUGAR" },
+  ]);
+
+  // Table rows state
   const [rows, setRows] = useState([
     {
       id: 1,
       srNo: 1,
       date: "",
-      openingBal: "",
-      aawak: "",
-      total: "",
-      sale: "",
-      closeBalance: "",
+      openingBal: "0.00",
+      aawak: "0.00",
+      total: "0.00",
+      sale: "0.00",
+      closeBalance: "0.00",
       remark: "",
     },
   ]);
 
   const [editingId, setEditingId] = useState(null);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   // Helper function to format numbers to 2 decimal places
   const formatNumber = (value) => {
-    if (value === "" || isNaN(value)) return "";
+    if (value === "" || isNaN(value)) return "0.00";
     const num = parseFloat(value);
     return num.toFixed(2);
   };
 
   const handleInputChange = (id, field, value) => {
-    // Limit to 2 decimal places for numeric fields
     if (["openingBal", "aawak", "sale"].includes(field)) {
       if (value.includes(".") && value.split(".")[1].length > 2) {
         value = parseFloat(value).toFixed(2);
@@ -37,14 +62,12 @@ const StockRajester = () => {
       if (row.id === id) {
         const updatedRow = { ...row, [field]: value };
 
-        // Auto-calculate total when openingBal or aawak changes
         if (field === "openingBal" || field === "aawak") {
           const opening = parseFloat(updatedRow.openingBal) || 0;
           const aawak = parseFloat(updatedRow.aawak) || 0;
           updatedRow.total = (opening + aawak).toFixed(2);
         }
 
-        // Auto-calculate closeBalance when total or sale changes
         if (field === "total" || field === "sale") {
           const total = parseFloat(updatedRow.total) || 0;
           const sale = parseFloat(updatedRow.sale) || 0;
@@ -63,34 +86,36 @@ const StockRajester = () => {
     setEditingId(id);
   };
 
-  const handleSubmit = (id) => {
-    setEditingId(null);
-    const currentRowIndex = rows.findIndex((row) => row.id === id);
-    const isLastRow = id === rows[rows.length - 1].id;
+  const handleParkerChange = (selectedOption) => {
+    setFormData((prev) => ({ ...prev, parker: selectedOption }));
+  };
 
-    if (
-      isLastRow &&
-      rows[currentRowIndex].date &&
-      rows[currentRowIndex].openingBal
-    ) {
-      // Get the close balance from current row to use as next row's opening balance
-      const nextOpeningBal = rows[currentRowIndex].closeBalance || "0.00";
+  const handleRowSubmit = (id) => {
+    const currentRow = rows.find((row) => row.id === id);
 
-      setRows([
-        ...rows,
-        {
-          id: rows.length + 1,
-          srNo: rows.length + 1,
-          date: "",
-          openingBal: nextOpeningBal,
-          aawak: "",
-          total: nextOpeningBal,
-          sale: "",
-          closeBalance: nextOpeningBal,
-          remark: "",
-        },
-      ]);
+    if (!currentRow.date || !currentRow.openingBal) {
+      alert("Please fill in Date and Opening Balance fields");
+      return;
     }
+
+    setEditingId(null);
+
+    const nextOpeningBal = currentRow.closeBalance || "0.00";
+
+    setRows([
+      ...rows,
+      {
+        id: rows.length + 1,
+        srNo: rows.length + 1,
+        date: "",
+        openingBal: nextOpeningBal,
+        aawak: "0.00",
+        total: nextOpeningBal,
+        sale: "0.00",
+        closeBalance: nextOpeningBal,
+        remark: "",
+      },
+    ]);
   };
 
   const handleDelete = (id) => {
@@ -112,7 +137,6 @@ const StockRajester = () => {
     }
   };
 
-  // Calculate totals for the summary row
   const calculateTotals = () => {
     const totals = {
       openingBal: 0,
@@ -135,111 +159,423 @@ const StockRajester = () => {
 
   const totals = calculateTotals();
 
+  // const handlePrint = () => {
+  //   if (rows.length === 0) {
+  //     alert("No data to print");
+  //     return;
+  //   }
+
+  //   const currentDate = new Date().toLocaleDateString();
+  //   const printContent = `
+  // <div style="margin-bottom: 20px; text-align: center;">
+  //       <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+  //       <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+  //         <div style="text-align: left;">
+  //           <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong>${
+  //             formData.shopkeeperName || "N/A"
+  //           }</p>
+  //            <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+  //              formData.villageName || "N/A"
+  //            }</p>
+  //             <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+  //               formData.parker
+  //             }</p>
+  //         </div>
+  //         <div style="text-align: left;">
+  //          <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+  //            formData.machineNumber || "N/A"
+  //          }</p>
+  //           <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+  //             formData.taluka || "N/A"
+  //           }</p>
+
+  //           <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+  //             formData.month || "N/A"
+  //           }</p>
+  //         </div>
+  //       </div>
+  //     </div>
+
+  //       <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+  //         <thead>
+  //           <tr>
+  //             <th>Sr No</th>
+  //             <th>Date</th>
+  //             <th>Opening Bal</th>
+  //             <th>Aawak</th>
+  //             <th>Total</th>
+  //             <th>Sale</th>
+  //             <th>Close Balance</th>
+  //             <th>Remark</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           ${rows
+  //             .map(
+  //               (row) => `
+  //             <tr>
+  //               <td>${row.srNo}</td>
+  //               <td>${row.date || "-"}</td>
+  //               <td>${formatNumber(row.openingBal)}</td>
+  //               <td>${formatNumber(row.aawak)}</td>
+  //               <td>${formatNumber(row.total)}</td>
+  //               <td>${formatNumber(row.sale)}</td>
+  //               <td>${formatNumber(row.closeBalance)}</td>
+  //               <td>${row.remark || "-"}</td>
+  //             </tr>
+  //           `
+  //             )
+  //             .join("")}
+  //           <tr style="font-weight: bold;">
+  //             <td colspan="2">Totals</td>
+  //             <td>${formatNumber(totals.openingBal)}</td>
+  //             <td>${formatNumber(totals.aawak)}</td>
+  //             <td>${formatNumber(totals.total)}</td>
+  //             <td>${formatNumber(totals.sale)}</td>
+  //             <td>${formatNumber(totals.closeBalance)}</td>
+  //             <td></td>
+  //           </tr>
+  //         </tbody>
+  //       </table>
+  //     `;
+
+  //   const printWindow = window.open("", "_blank");
+  //   if (!printWindow) {
+  //     alert("Please allow popups for this site to print the report");
+  //     return;
+  //   }
+
+  //   printWindow.document.write(`
+  //       <html>
+  //         <head>
+  //           <title>Stock Register Report</title>
+  //           <style>
+  //             body {
+  //               font-family: Arial, sans-serif;
+  //               padding: 25px;
+  //               color: #333;
+  //             }
+  //             table {
+  //               width: 100%;
+  //               border-collapse: collapse;
+  //               margin-bottom: 15px;
+  //             }
+  //             th, td {
+  //               border: 1px solid #000;
+  //               padding: 8px;
+  //               text-align: center;
+  //             }
+  //             th {
+  //               background-color: #f2f2f2;
+  //               font-weight: bold;
+  //             }
+  //             h2, h3 {
+  //               color: #50698d;
+  //               margin-top: 0;
+  //             }
+  //             @media print {
+  //               body { padding: 0; }
+  //               @page { size: auto; margin: 10mm; }
+  //             }
+  //           </style>
+  //         </head>
+  //         <body>
+  //           ${printContent}
+  //           <script>
+  //             window.onload = function() {
+  //               setTimeout(function() {
+  //                 window.print();
+  //                 setTimeout(function() {
+  //                   window.close();
+  //                 }, 500);
+  //               }, 200);
+  //             }
+  //           </script>
+  //         </body>
+  //       </html>
+  //     `);
+  //   printWindow.document.close();
+  // };
+
+  // const handlePrint = () => {
+  //   if (formData.length === 0) return;
+
+  //   // Get current date for the report header
+  //   const currentDate = new Date().toLocaleDateString();
+
+  //   // Create print content with enhanced header
+  //   //  //  <p style="margin: 2px 0;"><strong>:</strong> ${currentDate}</p>
+  //   const printContent = `
+  //   <div style="margin-bottom: 20px; text-align: center;">
+  //     <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+  //     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+  //       <div style="text-align: left;">
+  //         <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
+  //           formData.shopkeeperName || "N/A"
+  //         }</p>
+  //          <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+  //            formData.villageName || "N/A"
+  //          }</p>
+  //           <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+  //             formData?.parker || "N/A"
+  //           }</p>
+
+  //       </div>
+  //       <div style="text-align: left;">
+  //        <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+  //          formData?.machineNumber || "N/A"
+  //        }</p>
+
+  //         <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+  //           formData?.taluka || "N/A"
+  //         }</p>
+
+  //         <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+  //           formData?.month || "N/A"
+  //         }</p>
+  //       </div>
+  //     </div>
+  //   </div>
+
+  //   <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+  //     <thead>
+  //       <tr>
+  //         <th>अनुक्रमांक</th>
+  //         <th>दिनांक</th>
+  //         <th>पूर्वीची शिल्लक</th>
+  //         <th>आवक</th>
+  //         <th>एकूण</th>
+  //         <th>विक्री</th>
+  //         <th>शिल्लक</th>
+  //         <th>शेरा</th>
+  //       </tr>
+  //     </thead>
+  //            <tbody>
+  //           ${rows
+  //             .map(
+  //               (row) => `
+  //              <tr>
+  //                <td>${row.srNo}</td>
+  //                <td>${row.date || "-"}</td>
+  //                <td>${formatNumber(row.openingBal)}</td>
+  //                <td>${formatNumber(row.aawak)}</td>
+  //                <td>${formatNumber(row.total)}</td>
+  //                <td>${formatNumber(row.sale)}</td>
+  //                <td>${formatNumber(row.closeBalance)}</td>
+  //                <td>${row.remark || "-"}</td>
+  //              </tr>
+  //            `
+  //             )
+  //             .join("")}
+  //            <tr style="font-weight: bold;">
+  //              <td colspan="2">Totals</td>
+  //              <td>${formatNumber(totals.openingBal)}</td>
+  //              <td>${formatNumber(totals.aawak)}</td>
+  //              <td>${formatNumber(totals.total)}</td>
+  //              <td>${formatNumber(totals.sale)}</td>
+  //              <td>${formatNumber(totals.closeBalance)}</td>
+  //              <td></td>
+  //            </tr>
+  //          </tbody>
+  //   </table>
+
+  // `;
+
+  //   const printWindow = window.open("", "", "width=1000,height=700");
+  //   printWindow.document.write(`
+  //   <html>
+  //     <head>
+  //       <title>Stock Register Report</title>
+  //       <style>
+  //         body {
+  //           font-family: Arial, sans-serif;
+  //           padding: 25px;
+  //           color: #333;
+  //         }
+  //         table {
+  //           width: 100%;
+  //           border-collapse: collapse;
+  //           margin-bottom: 15px;
+  //         }
+  //         th, td {
+  //           border: 1px solid #000;
+  //           padding: 8px;
+  //           text-align: center;
+  //         }
+  //         th {
+  //           background-color: #f2f2f2;
+  //           font-weight: bold;
+  //         }
+  //         h2 {
+  //           color: #50698d;
+  //           margin-top: 0;
+  //         }
+  //         @media print {
+  //           body { padding: 0; }
+  //           @page { size: auto; margin: 10mm; }
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       ${printContent}
+  //       <script>
+  //         setTimeout(function() {
+  //           window.print();
+  //           window.close();
+  //         }, 200);
+  //       </script>
+  //     </body>
+  //   </html>
+  // `);
+  //   printWindow.document.close();
+  // };
+
   const handlePrint = () => {
-    if (rows.length === 0) return;
+    if (rows.length === 0) {
+      alert("No data to print");
+      return;
+    }
 
-    // Get current date for the report header
     const currentDate = new Date().toLocaleDateString();
-
-    // Create print content with enhanced header
     const printContent = `
-      <div style="margin-bottom: 20px; text-align: center;">
-        <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
-        <p style="margin: 2px 0;"><strong>Report Date:</strong> ${currentDate}</p>
+    <div style="margin-bottom: 20px; text-align: center;">
+      <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <div style="text-align: left;">
+          <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
+            formData.shopkeeperName || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+            formData.villageName || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+            formData.parker ? formData.parker.label : "N/A"
+          }</p>
+        </div>
+        <div style="text-align: left;">
+          <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+            formData.machineNumber || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+            formData.taluka || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+            formData.month || "N/A"
+          }</p>
+        </div>
       </div>
+    </div>
 
-      <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
-        <thead>
+    <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+      <thead>
+        <tr>
+         <th>अनुक्रमांक</th>
+          <th>दिनांक</th>
+          <th>पूर्वीची शिल्लक</th>
+          <th>आवक</th>
+          <th>एकूण</th>
+          <th>विक्री</th>
+          <th>शिल्लक</th>
+          <th>शेरा</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (row) => `
           <tr>
-            <th>Sr No</th>
-            <th>Date</th>
-            <th>Opening Bal</th>
-            <th>Aawak</th>
-            <th>Total</th>
-            <th>Sale</th>
-            <th>Close Balance</th>
-            <th>Remark</th>
+            <td>${row.srNo}</td>
+            <td>${row.date || "-"}</td>
+            <td>${formatNumber(row.openingBal)}</td>
+            <td>${formatNumber(row.aawak)}</td>
+            <td>${formatNumber(row.total)}</td>
+            <td>${formatNumber(row.sale)}</td>
+            <td>${formatNumber(row.closeBalance)}</td>
+            <td>${row.remark || "-"}</td>
           </tr>
-        </thead>
-        <tbody>
-          ${rows
-            .map(
-              (row) => `
-            <tr>
-              <td>${row.srNo}</td>
-              <td>${row.date || "-"}</td>
-              <td>${row.openingBal ? formatNumber(row.openingBal) : "0.00"}</td>
-              <td>${row.aawak ? formatNumber(row.aawak) : "0.00"}</td>
-              <td>${row.total ? formatNumber(row.total) : "0.00"}</td>
-              <td>${row.sale ? formatNumber(row.sale) : "0.00"}</td>
-              <td>${
-                row.closeBalance ? formatNumber(row.closeBalance) : "0.00"
-              }</td>
-              <td>${row.remark || "-"}</td>
-            </tr>
-          `
-            )
-            .join("")}
-          <tr style="font-weight: bold;">
-            <td colspan="2">Totals</td>
-            <td>${formatNumber(totals.openingBal)}</td>
-            <td>${formatNumber(totals.aawak)}</td>
-            <td>${formatNumber(totals.total)}</td>
-            <td>${formatNumber(totals.sale)}</td>
-            <td>${formatNumber(totals.closeBalance)}</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    `;
+        `
+          )
+          .join("")}
+        <tr style="font-weight: bold;">
+          <td colspan="2">Totals</td>
+          <td>${formatNumber(totals.openingBal)}</td>
+          <td>${formatNumber(totals.aawak)}</td>
+          <td>${formatNumber(totals.total)}</td>
+          <td>${formatNumber(totals.sale)}</td>
+          <td>${formatNumber(totals.closeBalance)}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  `;
 
     const printWindow = window.open("", "", "width=1000,height=700");
     printWindow.document.write(`
-      <html>
-        <head>
-          <title>Stock Register Report</title>
-          <style>
-            body { 
-              font-family: Arial, sans-serif; 
-              padding: 25px; 
-              color: #333;
-            }
-            table { 
-              width: 100%; 
-              border-collapse: collapse; 
-              margin-bottom: 15px;
-            }
-            th, td { 
-              border: 1px solid #000; 
-              padding: 8px; 
-              text-align: center; 
-            }
-            th { 
-              background-color: #f2f2f2; 
-              font-weight: bold;
-            }
-            h2 {
-              color: #50698d;
-              margin-top: 0;
-            }
-            @media print {
-              body { padding: 0; }
-              @page { size: auto; margin: 10mm; }
-            }
-          </style>
-        </head>
-        <body>
-          ${printContent}
-          <script>
+    <html>
+      <head>
+        <title>Stock Register Report</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 25px;
+            color: #333;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+          }
+          th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+          }
+          th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+          }
+          h2, h3 {
+            color: #50698d;
+            margin-top: 0;
+          }
+          @media print {
+            body { padding: 0; }
+            @page { size: auto; margin: 10mm; }
+          }
+        </style>
+      </head>
+      <body>
+        ${printContent}
+        <script>
+          window.onload = function() {
             setTimeout(function() {
               window.print();
-              window.close();
+              setTimeout(function() {
+                window.close();
+              }, 500);
             }, 200);
-          </script>
-        </body>
-      </html>
-    `);
+          }
+        </script>
+      </body>
+    </html>
+  `);
     printWindow.document.close();
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    // Here you would typically send the data to an API
+    console.log("Form submitted:", { formData, rows });
+    alert("Form data saved successfully!");
+    setIsFormSubmitted(false);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
@@ -254,6 +590,7 @@ const StockRajester = () => {
           position: "relative",
         }}
       >
+        <div style={{ width: "80px" }}></div>
         <span
           style={{
             fontSize: "20px",
@@ -266,32 +603,209 @@ const StockRajester = () => {
         >
           Stock Register
         </span>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            onClick={handlePrint}
-            className="btn"
-            disabled={rows.length === 0}
-            title="Print"
-            style={{
-              borderRadius: "50%",
-              backgroundColor: "#50698d",
-              color: "#fff",
-              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-              width: "40px",
-              height: "40px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 0,
-            }}
-          >
-            <i className="fa fa-print" aria-hidden="true"></i>
-          </button>
-        </div>
+        {isFormSubmitted ? (
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              onClick={() => setIsFormSubmitted(false)}
+              className="btn"
+              title="Back to list"
+              style={{
+                borderRadius: "50%",
+                backgroundColor: "#50698d",
+                color: "#fff",
+                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+                width: "40px",
+                height: "40px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              }}
+            >
+              <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              onClick={() => setIsFormSubmitted(true)}
+              className="btn"
+              title="Add"
+              style={{
+                borderRadius: "50%",
+                backgroundColor: "#50698d",
+                color: "#fff",
+                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+                width: "40px",
+                height: "40px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              }}
+            >
+              <i className="fa fa-plus" aria-hidden="true"></i>
+            </button>
+
+            <button
+              onClick={handlePrint}
+              className="btn"
+              disabled={rows.length === 0}
+              title="Print"
+              style={{
+                borderRadius: "50%",
+                backgroundColor: "#50698d",
+                color: "#fff",
+                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+                width: "40px",
+                height: "40px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 0,
+              }}
+            >
+              <i className="fa fa-print" aria-hidden="true"></i>
+            </button>
+          </div>
+        )}
       </div>
-      <div className="card mt-4" id="printable-table">
-        <div className="card-body p-0">
-          <div className="table-responsive">
+
+      {isFormSubmitted ? (
+        <div className="card-body">
+          <form onSubmit={handleFormSubmit}>
+            <div className="row">
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">
+                    Shopkeeper Name (रास्तभाव दुकानदाराचे नाव)
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="shopkeeperName"
+                    value={formData.shopkeeperName}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">
+                    Machine Number (पॉस मशीन न)
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="machineNumber"
+                    value={formData.machineNumber}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">
+                    Village Name (गाव)
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="villageName"
+                    value={formData.villageName}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">Taluka (तालुका)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="taluka"
+                    value={formData.taluka}
+                    onChange={handleFormChange}
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">
+                    Schemes (धान्याचे प्रकार)
+                  </label>
+                  <Select
+                    value={formData.parker}
+                    onChange={handleParkerChange}
+                    options={parkerOptions}
+                    isSearchable={true}
+                    placeholder="Select Scheme..."
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                    styles={{
+                      singleValue: (provided) => ({
+                        ...provided,
+                        textAlign: "left",
+                      }),
+                      placeholder: (provided) => ({
+                        ...provided,
+                        textAlign: "left",
+                      }),
+                      option: (provided) => ({
+                        ...provided,
+                        textAlign: "left",
+                      }),
+                      control: (provided) => ({
+                        ...provided,
+                        textAlign: "left",
+                      }),
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="form-label lblName">Month (महिना)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="month"
+                    value={formData.month}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-center gap-2 mb-3 mt-4">
+              <button
+                type="button"
+                className="btn"
+                style={{ backgroundColor: "#50698d", color: "#fff" }}
+                onClick={() => setIsFormSubmitted(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn"
+                style={{ backgroundColor: "#50698d", color: "#fff" }}
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        <div className="card mt-4" id="printable-table">
+          <div className="card-body p-0">
             <table className="table table-bordered table-striped mb-0">
               <thead className="table-light">
                 <tr>
@@ -333,6 +847,7 @@ const StockRajester = () => {
                           onChange={(e) =>
                             handleInputChange(row.id, "date", e.target.value)
                           }
+                          required
                         />
                       ) : (
                         row.date || "—"
@@ -352,11 +867,10 @@ const StockRajester = () => {
                               e.target.value
                             )
                           }
+                          required
                         />
-                      ) : row.openingBal ? (
-                        formatNumber(row.openingBal)
                       ) : (
-                        "—"
+                        formatNumber(row.openingBal)
                       )}
                     </td>
                     <td className="align-middle">
@@ -370,14 +884,12 @@ const StockRajester = () => {
                             handleInputChange(row.id, "aawak", e.target.value)
                           }
                         />
-                      ) : row.aawak ? (
-                        formatNumber(row.aawak)
                       ) : (
-                        "—"
+                        formatNumber(row.aawak)
                       )}
                     </td>
                     <td className="text-center align-middle">
-                      {row.total ? formatNumber(row.total) : "—"}
+                      {formatNumber(row.total)}
                     </td>
                     <td className="align-middle">
                       {editingId === row.id ? (
@@ -390,14 +902,12 @@ const StockRajester = () => {
                             handleInputChange(row.id, "sale", e.target.value)
                           }
                         />
-                      ) : row.sale ? (
-                        formatNumber(row.sale)
                       ) : (
-                        "—"
+                        formatNumber(row.sale)
                       )}
                     </td>
                     <td className="text-center align-middle">
-                      {row.closeBalance ? formatNumber(row.closeBalance) : "—"}
+                      {formatNumber(row.closeBalance)}
                     </td>
                     <td className="align-middle">
                       {editingId === row.id ? (
@@ -417,7 +927,7 @@ const StockRajester = () => {
                       <div className="d-flex gap-2 justify-content-center">
                         {editingId === row.id ? (
                           <button
-                            onClick={() => handleSubmit(row.id)}
+                            onClick={() => handleRowSubmit(row.id)}
                             className="btn btn-sm p-1"
                             title="Save"
                           >
@@ -452,33 +962,32 @@ const StockRajester = () => {
                     </td>
                   </tr>
                 ))}
-                {/* Totals row */}
                 <tr className="fw-bold">
                   <td className="text-center align-middle" colSpan="2">
                     Totals
                   </td>
                   <td className="text-center align-middle">
-                    <span className="badge bg-primary">
+                    <span className="badge-custom">
                       {formatNumber(totals.openingBal)}
                     </span>
                   </td>
                   <td className="text-center align-middle">
-                    <span className="badge bg-primary">
+                    <span className="badge-custom ">
                       {formatNumber(totals.aawak)}
                     </span>
                   </td>
                   <td className="text-center align-middle">
-                    <span className="badge bg-primary">
+                    <span className="badge-custom ">
                       {formatNumber(totals.total)}
                     </span>
                   </td>
                   <td className="text-center align-middle">
-                    <span className="badge bg-primary">
+                    <span className="badge-custom">
                       {formatNumber(totals.sale)}
                     </span>
                   </td>
                   <td className="text-center align-middle">
-                    <span className="badge bg-primary">
+                    <span className="badge-custom">
                       {formatNumber(totals.closeBalance)}
                     </span>
                   </td>
@@ -488,7 +997,7 @@ const StockRajester = () => {
             </table>
           </div>
         </div>
-      </div>
+      )}
       <div className="mt-4"></div>
     </div>
   );
