@@ -236,12 +236,16 @@ const StockRajester = () => {
     </table>
   `;
 
-    const printWindow = window.open("", "", "width=1000,height=700");
+    const printWindow = window.open("", "PRINT", "width=1000,height=700");
     printWindow.document.write(`
     <html>
       <head>
         <title>Stock Register Report</title>
         <style>
+         @page {
+            size: auto;
+            margin: 0;
+          }
           body {
             font-family: Arial, sans-serif;
             padding: 25px;
@@ -266,8 +270,12 @@ const StockRajester = () => {
             margin-top: 0;
           }
           @media print {
-            body { padding: 0; }
-            @page { size: auto; margin: 10mm; }
+            @page {
+              margin: 0;
+            }
+            body {
+              padding: 10mm;
+            }
           }
         </style>
       </head>
@@ -288,10 +296,119 @@ const StockRajester = () => {
   `);
     printWindow.document.close();
   };
+  //   const printWindow = window.open("", "PRINT", "width=1000,height=600");
+  //   const printContent = `
+  //   <div style="margin-bottom: 20px; text-align: center;">
+  //     <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+  //     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+  //       <div style="text-align: left;">
+  //         <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
+  //           formData.shopkeeperName || "N/A"
+  //         }</p>
+  //         <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+  //           formData.villageName || "N/A"
+  //         }</p>
+  //         <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+  //           formData.parker ? formData.parker.label : "N/A"
+  //         }</p>
+  //       </div>
+  //       <div style="text-align: left;">
+  //         <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+  //           formData.machineNumber || "N/A"
+  //         }</p>
+  //         <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+  //           formData.taluka || "N/A"
+  //         }</p>
+  //         <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+  //           formData.month || "N/A"
+  //         }</p>
+  //       </div>
+  //     </div>
+  //   </div>
 
+  //   <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+  //     <thead>
+  //       <tr>
+  //        <th>अनुक्रमांक</th>
+  //         <th>दिनांक</th>
+  //         <th>पूर्वीची शिल्लक</th>
+  //         <th>आवक</th>
+  //         <th>एकूण</th>
+  //         <th>विक्री</th>
+  //         <th>शिल्लक</th>
+  //         <th>शेरा</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody>
+  //       ${rows
+  //         .map(
+  //           (row) => `
+  //         <tr>
+  //           <td>${row.srNo}</td>
+  //           <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
+  //           <td>${formatNumber(row.openingBal)}</td>
+  //           <td>${formatNumber(row.aawak)}</td>
+  //           <td>${formatNumber(row.total)}</td>
+  //           <td>${formatNumber(row.sale)}</td>
+  //           <td>${formatNumber(row.closeBalance)}</td>
+  //           <td>${row.remark || "-"}</td>
+  //         </tr>
+  //       `
+  //         )
+  //         .join("")}
+  //       <tr style="font-weight: bold;">
+  //         <td colspan="2">एकूण</td>
+  //         <td>${formatNumber(totals.openingBal)}</td>
+  //         <td>${formatNumber(totals.aawak)}</td>
+  //         <td>${formatNumber(totals.total)}</td>
+  //         <td>${formatNumber(totals.sale)}</td>
+  //         <td>${formatNumber(totals.closeBalance)}</td>
+  //         <td></td>
+  //       </tr>
+  //     </tbody>
+  //   </table>
+  // `;
+
+  //   printWindow.document.write(`
+  //   <!DOCTYPE html>
+  //   <html>
+  //     <head>
+  //       <title>Stock Register Report</title>
+  //       <style>
+  //         @page {
+  //           size: auto;
+  //           margin: 0;
+  //         }
+  //         body {
+  //           margin: 0;
+  //           padding: 15mm;
+  //         }
+  //         @media print {
+  //           @page {
+  //             margin: 0;
+  //           }
+  //           body {
+  //             padding: 10mm;
+  //           }
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       ${printContent}
+  //       <script>
+  //         window.onafterprint = function() {
+  //           window.close();
+  //         };
+  //         window.print();
+  //       </script>
+  //     </body>
+  //   </html>
+  // `);
+  //   printWindow.document.close();
+  // };
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the data to an API
+
     console.log("Form submitted:", { formData, rows });
     alert("Form data saved successfully!");
     setIsFormSubmitted(false);
@@ -305,22 +422,6 @@ const StockRajester = () => {
     }));
   };
 
-  //   try {
-  //     // First try ISO format (YYYY-MM-DD)
-  //     const date = new Date(dateString);
-  //     if (!isNaN(date.getTime())) {
-  //       const day = String(date.getDate()).padStart(2, "0");
-  //       const month = String(date.getMonth() + 1).padStart(2, "0");
-  //       const year = date.getFullYear();
-  //       return `${day}-${month}-${year}`;
-  //     }
-
-  //     // If not in ISO format, try to parse as is (fallback)
-  //     return dateString;
-  //   } catch {
-  //     return dateString; // Return original if parsing fails
-  //   }
-  // };
   // Date formate : 12-June-2025
 
   const formatDateToDDMMYYYY = (dateString) => {
