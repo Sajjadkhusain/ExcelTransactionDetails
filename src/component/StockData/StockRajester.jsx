@@ -43,7 +43,6 @@ const StockRajester = () => {
   const [editingId, setEditingId] = useState(null);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  // Helper function to format numbers to 2 decimal places
   const formatNumber = (value) => {
     if (value === "" || isNaN(value)) return "0.00";
     const num = parseFloat(value);
