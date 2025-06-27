@@ -213,7 +213,7 @@ const StockRajester = () => {
             (row) => `
           <tr>
             <td>${row.srNo}</td>
-            <td>${row.date || "-"}</td>
+            <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
             <td>${formatNumber(row.openingBal)}</td>
             <td>${formatNumber(row.aawak)}</td>
             <td>${formatNumber(row.total)}</td>
@@ -306,6 +306,50 @@ const StockRajester = () => {
     }));
   };
 
+  //   try {
+  //     // First try ISO format (YYYY-MM-DD)
+  //     const date = new Date(dateString);
+  //     if (!isNaN(date.getTime())) {
+  //       const day = String(date.getDate()).padStart(2, "0");
+  //       const month = String(date.getMonth() + 1).padStart(2, "0");
+  //       const year = date.getFullYear();
+  //       return `${day}-${month}-${year}`;
+  //     }
+
+  //     // If not in ISO format, try to parse as is (fallback)
+  //     return dateString;
+  //   } catch {
+  //     return dateString; // Return original if parsing fails
+  //   }
+  // };
+  // Date formate : 12-June-2025
+
+  const formatDateToDDMMYYYY = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const monthName = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day}-${monthName}-${year}`;
+  };
   return (
     <div className="container text-center card">
       <div
@@ -467,34 +511,6 @@ const StockRajester = () => {
                   <label className="form-label lblName">
                     Schemes (धान्याचे प्रकार)
                   </label>
-                  {/* <Select
-                    value={formData.parker}
-                    onChange={handleParkerChange}
-                    options={parkerOptions}
-                    isSearchable={true}
-                    placeholder="Select Scheme..."
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    styles={{
-                      singleValue: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                      placeholder: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                      option: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                      control: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                    }}
-                    required
-                  /> */}
                   <Select
                     value={formData.parker}
                     onChange={handleParkerChange}
@@ -627,8 +643,10 @@ const StockRajester = () => {
                           }
                           required
                         />
+                      ) : row.date ? (
+                        formatDateToDDMMYYYY(row.date)
                       ) : (
-                        row.date || "—"
+                        "—"
                       )}
                     </td>
                     <td className="align-middle">
