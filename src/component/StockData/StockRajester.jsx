@@ -611,7 +611,7 @@ const StockRajester = () => {
                     Opening Bal
                   </th>
                   <th className="headerColor text-center align-middle">
-                    Aawak
+                    Income
                   </th>
                   <th className="headerColor text-center align-middle">
                     Total
