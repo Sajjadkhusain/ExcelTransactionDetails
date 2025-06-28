@@ -434,73 +434,72 @@ const Transactiondetails = () => {
               )}
             </tbody>
           </table>
-          {totalPages > 1 && (
-            <div
-              className="pagination-container"
-              style={{ padding: "15px", textAlign: "center" }}
-            >
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="pagination-btn"
-                style={{ marginRight: "5px" }}
-              >
-                &lt; Prev
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(
-                  (page) =>
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                )
-                .map((page, index, arr) => (
-                  <React.Fragment key={page}>
-                    {index > 0 && page - arr[index - 1] > 1 && (
-                      <span
-                        className="pagination-ellipsis"
-                        style={{ margin: "0 5px" }}
-                      >
-                        ...
-                      </span>
-                    )}
-                    <button
-                      onClick={() => setCurrentPage(page)}
-                      className={`pagination-btn ${
-                        currentPage === page ? "active" : ""
-                      }`}
-                      style={{
-                        marginRight: "5px",
-                        padding: "5px 10px",
-                        backgroundColor:
-                          currentPage === page ? "#50698d" : "#f8f9fa",
-
-                        color: currentPage === page ? "#fff" : "#000",
-                        border: "1px solid #dee2e6",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {page}
-                    </button>
-                  </React.Fragment>
-                ))}
-
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="pagination-btn"
-              >
-                Next &gt;
-              </button>
-            </div>
-          )}
         </div>
       </div>
+      {totalPages > 1 && (
+        <div
+          className="pagination-container"
+          style={{ padding: "15px", textAlign: "center" }}
+        >
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+            style={{ marginRight: "5px" }}
+          >
+            &lt; Prev
+          </button>
 
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(
+              (page) =>
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+            )
+            .map((page, index, arr) => (
+              <React.Fragment key={page}>
+                {index > 0 && page - arr[index - 1] > 1 && (
+                  <span
+                    className="pagination-ellipsis"
+                    style={{ margin: "0 5px" }}
+                  >
+                    ...
+                  </span>
+                )}
+                <button
+                  onClick={() => setCurrentPage(page)}
+                  className={`pagination-btn ${
+                    currentPage === page ? "active" : ""
+                  }`}
+                  style={{
+                    marginRight: "5px",
+                    padding: "5px 10px",
+                    backgroundColor:
+                      currentPage === page ? "#50698d" : "#f8f9fa",
+
+                    color: currentPage === page ? "#fff" : "#000",
+                    border: "1px solid #dee2e6",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {page}
+                </button>
+              </React.Fragment>
+            ))}
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            Next &gt;
+          </button>
+        </div>
+      )}
       <div style={{ marginTop: 20, fontWeight: "bold", textAlign: "right" }}>
         {(() => {
           const { wheat, frice } = calculateTotals();
