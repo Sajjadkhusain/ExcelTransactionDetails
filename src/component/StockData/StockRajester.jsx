@@ -411,12 +411,14 @@ const StockRajester = () => {
       <div className="container mainDiv">
         <div className="subDiv">
           <div style={{ width: "80px" }}></div>
-          <span className="mainHeading">Stock Register</span>
+          <span className="mainHeading">
+            <span style={{ color: "white" }}>Stock Register</span>
+          </span>
           {isFormSubmitted ? (
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={() => setIsFormSubmitted(false)}
-                className="btn circleBtn"
+                className="btn circleIcon"
                 title="Back to list"
               >
                 <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
@@ -426,7 +428,7 @@ const StockRajester = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={() => setIsFormSubmitted(true)}
-                className="btn circleBtn"
+                className="btn circleIcon"
                 title="Add"
               >
                 <i className="fa fa-plus" aria-hidden="true"></i>
@@ -434,7 +436,7 @@ const StockRajester = () => {
 
               <button
                 onClick={handlePrint}
-                className="btn circleBtn"
+                className="btn circleIcon"
                 disabled={rows.length === 0}
                 title="Print"
               >
@@ -584,7 +586,7 @@ const StockRajester = () => {
                 <button
                   type="button"
                   className="btn"
-                  style={{ backgroundColor: "#50698d", color: "#fff" }}
+                  style={{ border: "1px solid #fff", color: "#fff" }}
                   onClick={() => setIsFormSubmitted(false)}
                 >
                   Cancel
@@ -592,7 +594,7 @@ const StockRajester = () => {
                 <button
                   type="submit"
                   className="btn"
-                  style={{ backgroundColor: "#50698d", color: "#fff" }}
+                  style={{ border: "1px solid #fff", color: "#fff" }}
                 >
                   Submit
                 </button>
@@ -779,7 +781,7 @@ const StockRajester = () => {
                     </tr>
                   ))}
                 </tbody>
-                <div className="mt-4"></div>
+
                 <tfoot>
                   <tr>
                     <td
@@ -813,6 +815,7 @@ const StockRajester = () => {
               </table>
             </div>
           )}
+          <div className="mt-3"></div>
         </div>
       </div>
     </>
