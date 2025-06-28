@@ -179,7 +179,7 @@ const StockRajester = () => {
 
   const totals = calculateTotals();
 
-  const handlePrint = () => {
+  const handlePrint1 = () => {
     if (rows.length === 0) {
       toast.success("No Data To Print!", {
         className: "custom-toast",
@@ -235,7 +235,7 @@ const StockRajester = () => {
           </div>
         </div>
       </div>
-  
+
       <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
         <thead>
           <tr>
@@ -293,36 +293,36 @@ const StockRajester = () => {
               font-family: Arial, sans-serif;
             }
           }
-  
+
             body {
               font-family: Arial, sans-serif;
               padding: 10mm;
               color: #333;
             }
-  
+
             table {
               width: 100%;
               border-collapse: collapse;
               margin-bottom: 15px;
             }
-  
+
             th, td {
               border: 1px solid #000;
               padding: 8px;
               text-align: center;
             }
-  
+
             th {
               background-color: #f2f2f2;
               font-weight: bold;
             }
-  
+
             h2, h3 {
               color: #50698d;
               margin-top: 0;
             }
           </style>
-  
+
         </head>
         <body>
           ${printContent}
@@ -341,6 +341,146 @@ const StockRajester = () => {
     `);
     printWindow.document.close();
   };
+  const handlePrint = () => {
+    if (rows.length === 0) {
+      alert("No data to print");
+      return;
+    }
+
+    const currentDate = new Date().toLocaleDateString();
+    const printContent = `
+    <div style="margin-bottom: 20px; text-align: center;">
+      <h2 style="margin-bottom: 15px;">स्टॉक रजिस्टर अहवाल</h2>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <div style="text-align: left;">
+          <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
+            formData.shopkeeperName || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+            formData.villageName || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+            formData.parker ? formData.parker.label : "N/A"
+          }</p>
+        </div>
+        <div style="text-align: left;">
+          <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+            formData.machineNumber || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+            formData.taluka || "N/A"
+          }</p>
+          <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+            formData.month || "N/A"
+          }</p>
+        </div>
+      </div>
+    </div>
+
+    <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+      <thead>
+        <tr>
+         <th>अनुक्रमांक</th>
+          <th>दिनांक</th>
+          <th>पूर्वीची शिल्लक</th>
+          <th>आवक</th>
+          <th>एकूण</th>
+          <th>विक्री</th>
+          <th>शिल्लक</th>
+          <th>शेरा</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (row) => `
+          <tr>
+            <td>${row.srNo}</td>
+            <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
+            <td>${formatNumber(row.openingBal)}</td>
+            <td>${formatNumber(row.aawak)}</td>
+            <td>${formatNumber(row.total)}</td>
+            <td>${formatNumber(row.sale)}</td>
+            <td>${formatNumber(row.closeBalance)}</td>
+            <td>${row.remark || "-"}</td>
+          </tr>
+        `
+          )
+          .join("")}
+        <tr style="font-weight: bold;">
+          <td colspan="2">एकूण</td>
+          <td>${formatNumber(totals.openingBal)}</td>
+          <td>${formatNumber(totals.aawak)}</td>
+          <td>${formatNumber(totals.total)}</td>
+          <td>${formatNumber(totals.sale)}</td>
+          <td>${formatNumber(totals.closeBalance)}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+    const printWindow = window.open("", "", "width=1000,height=700");
+    printWindow.document.write(`
+    <html>
+      <head>
+        <title>Stock Register Report</title>
+        <style>
+         @page {
+            margin: 20mm;
+            @bottom-center {
+              content: "पृष्ठ क्रमांक: " counter(page) " / " counter(pages);
+              font-size: 12px;
+              font-family: Arial, sans-serif;
+            }
+          }
+          body {
+            font-family: Arial, sans-serif;
+            padding: 25px;
+            color: #333;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+          }
+          th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+          }
+          th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+          }
+          h2, h3 {
+            color: #50698d;
+            margin-top: 0;
+          }
+          @media print {
+            body { padding: 0; }
+            @page { size: auto; margin: 10mm; }
+          }
+        </style>
+      </head>
+      <body>
+        ${printContent}
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 500);
+            }, 200);
+          }
+        </script>
+      </body>
+    </html>
+  `);
+    printWindow.document.close();
+  };
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
