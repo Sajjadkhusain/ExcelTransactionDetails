@@ -181,7 +181,28 @@ const StockRajester = () => {
 
   const handlePrint = () => {
     if (rows.length === 0) {
-      alert("No data to print");
+      toast.success("No Data To Print!", {
+        className: "custom-toast",
+        progressClassName: "custom-progress",
+        icon: (
+          <span
+            style={{
+              display: "inline-block",
+              width: "24px",
+              height: "24px",
+              borderRadius: "50%",
+              backgroundColor: "#ffff",
+              color: "#50698d",
+              textAlign: "center",
+              lineHeight: "24px",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            ✔
+          </span>
+        ),
+      });
       return;
     }
 
@@ -323,8 +344,29 @@ const StockRajester = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Form submitted:", { formData, rows });
-    alert("Form data saved successfully!");
+    toast.success("Form data saved successfully!", {
+      className: "custom-toast",
+      progressClassName: "custom-progress",
+      icon: (
+        <span
+          style={{
+            display: "inline-block",
+            width: "24px",
+            height: "24px",
+            borderRadius: "50%",
+            backgroundColor: "#ffff",
+            color: "#50698d",
+            textAlign: "center",
+            lineHeight: "24px",
+            fontSize: "16px",
+            fontWeight: "bold",
+          }}
+        >
+          ✔
+        </span>
+      ),
+    });
+
     setIsFormSubmitted(false);
   };
 
@@ -577,7 +619,7 @@ const StockRajester = () => {
                       Date
                     </th>
                     <th className="text-center align-middle headingColor ">
-                      Opening Bal
+                      Opening Balance
                     </th>
                     <th className="text-center align-middle headingColor ">
                       Income
