@@ -241,43 +241,45 @@ const StockRajester = () => {
     <html>
       <head>
         <title>Stock Register Report</title>
-        <style>
-         @page {
-            size: auto;
-            margin: 0;
+       <style>
+        @page {
+          margin: 20mm;
+          @bottom-center {
+            content: "पृष्ठ क्रमांक: " counter(page) " / " counter(pages);
+            font-size: 12px;
+            font-family: Arial, sans-serif;
           }
+        }
+
           body {
             font-family: Arial, sans-serif;
-            padding: 25px;
+            padding: 10mm;
             color: #333;
           }
+
           table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
           }
+
           th, td {
             border: 1px solid #000;
             padding: 8px;
             text-align: center;
           }
+
           th {
             background-color: #f2f2f2;
             font-weight: bold;
           }
+
           h2, h3 {
             color: #50698d;
             margin-top: 0;
           }
-          @media print {
-            @page {
-              margin: 0;
-            }
-            body {
-              padding: 10mm;
-            }
-          }
         </style>
+
       </head>
       <body>
         ${printContent}
