@@ -213,6 +213,7 @@ const Fps = () => {
             fontWeight: "bold",
             textAlign: "center",
             flex: 1,
+            color: "white",
           }}
         >
           FPS - D1
