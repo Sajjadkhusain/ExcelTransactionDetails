@@ -40,7 +40,7 @@
 /******Toastify css *************/
 /* Add this to your CSS file */
 .custom-toast {
-  background-color: #50698d !important; /* Deep teal background */
+  background-color: #e0dcdc !important;
   color: #ffffff !important; /* White text */
   font-weight: bold;
   border-radius: 8px;

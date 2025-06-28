@@ -248,20 +248,21 @@ const Transactiondetails = () => {
         <div style={{ width: "80px" }}></div>
         <span
           style={{
-            fontSize: "20px",
+            fontSize: "1.6rem",
             fontWeight: "bold",
             textAlign: "center",
+            color: "white",
             flex: 1,
           }}
         >
-          Transaction Details for FPS
+          TRANSACTION DETAILS FOR FPS
         </span>
         <div style={{ display: "flex", gap: "10px" }}>
           <label
             htmlFor="uploadExcel"
             style={{
               borderRadius: "50%",
-              backgroundColor: "#50698d",
+              backgroundColor: "#e0dcdc",
               color: "#fff",
               boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
               width: "40px",
@@ -273,7 +274,11 @@ const Transactiondetails = () => {
             }}
             title="Upload Excel"
           >
-            <i className="fa fa-upload" aria-hidden="true"></i>
+            <i
+              className="fa fa-upload"
+              style={{ color: "black" }}
+              aria-hidden="true"
+            ></i>
             <input
               id="uploadExcel"
               type="file"
@@ -288,7 +293,7 @@ const Transactiondetails = () => {
             title="Download"
             style={{
               borderRadius: "50%",
-              backgroundColor: filteredData.length === 0 ? "#ccc" : "#50698d",
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "#e0dcdc",
               color: "#fff",
               cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
               boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
@@ -301,7 +306,10 @@ const Transactiondetails = () => {
             }}
             disabled={filteredData.length === 0}
           >
-            <i className="bi bi-download"></i>
+            <i
+              className="bi bi-download"
+              style={{ color: "black", fontSize: "1.3rem", fontWeight: "bold" }}
+            ></i>
           </button>
           <button
             onClick={handlePrint}
@@ -310,7 +318,7 @@ const Transactiondetails = () => {
             title="Print"
             style={{
               borderRadius: "50%",
-              backgroundColor: "#50698d",
+              backgroundColor: "#e0dcdc",
               color: "#fff",
               boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
               width: "40px",
@@ -321,20 +329,15 @@ const Transactiondetails = () => {
               padding: 0,
             }}
           >
-            <i className="fa fa-print" aria-hidden="true"></i>
+            <i
+              className="fa fa-print"
+              style={{ color: "black", fontSize: "1rem", fontWeight: "bold" }}
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
       <div className="row align-items-center mt-3 gx-2 justify-content-center">
-        {/* <div className="col-md-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchText}
-            onChange={handleSearch}
-            className="form-control"
-          />
-        </div> */}
         <div className="col-md-2">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0">
@@ -476,7 +479,7 @@ const Transactiondetails = () => {
                     marginRight: "5px",
                     padding: "5px 10px",
                     backgroundColor:
-                      currentPage === page ? "#50698d" : "#f8f9fa",
+                      currentPage === page ? "#a99696d9" : "#f8f9fa",
 
                     color: currentPage === page ? "#fff" : "#000",
                     border: "1px solid #dee2e6",

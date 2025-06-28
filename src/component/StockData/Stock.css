@@ -3,7 +3,8 @@
   border-radius: 10px;
   border: 1px solid #50698d;
   margin-top: 77px;
-  background-color: #50698d;
+  background-color: darkgray;
+  /* background-color: #50698d; */
 }
 .subDiv {
   display: flex;
@@ -51,9 +52,9 @@
 
 /****************Table css****************************/
 .headingColor {
-  background-color: #50698d !important;
+  background-color: darkgray !important;
   /* background-color: #50698d !important; */
-  color: white !important;
+  color: black !important;
 }
 .scrollable-wrapper {
   max-height: 471px;

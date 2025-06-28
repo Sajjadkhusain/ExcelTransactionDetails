@@ -222,7 +222,7 @@ const Fps = () => {
             htmlFor="uploadExcel"
             style={{
               borderRadius: "50%",
-              backgroundColor: "#50698d",
+              backgroundColor: "#e0dcdc",
               color: "#fff",
               width: "40px",
               height: "40px",
@@ -233,7 +233,11 @@ const Fps = () => {
             }}
             title="Upload Excel"
           >
-            <i className="fa fa-upload" aria-hidden="true"></i>
+            <i
+              className="fa fa-upload"
+              style={{ color: "black" }}
+              aria-hidden="true"
+            ></i>
             <input
               id="uploadExcel"
               type="file"
@@ -248,7 +252,7 @@ const Fps = () => {
             title="Download"
             style={{
               borderRadius: "50%",
-              backgroundColor: filteredData.length === 0 ? "#ccc" : "#50698d",
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "#e0dcdc",
               color: "#fff",
               cursor: filteredData.length === 0 ? "not-allowed" : "pointer",
               width: "40px",
@@ -260,7 +264,10 @@ const Fps = () => {
             }}
             disabled={filteredData.length === 0}
           >
-            <i className="fa fa-download"></i>
+            <i
+              className="fa fa-download"
+              style={{ color: "black", fontSize: "1rem", fontWeight: "bold" }}
+            ></i>
           </button>
           <button
             onClick={handlePrint}
@@ -268,7 +275,7 @@ const Fps = () => {
             title="Print"
             style={{
               borderRadius: "50%",
-              backgroundColor: filteredData.length === 0 ? "#ccc" : "#50698d",
+              backgroundColor: filteredData.length === 0 ? "#ccc" : "#e0dcdc",
               color: "#fff",
               width: "40px",
               height: "40px",
@@ -280,7 +287,11 @@ const Fps = () => {
             }}
             disabled={filteredData.length === 0}
           >
-            <i className="fa fa-print" aria-hidden="true"></i>
+            <i
+              className="fa fa-print"
+              style={{ color: "black", fontSize: "1rem", fontWeight: "bold" }}
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
       </div>
@@ -393,7 +404,7 @@ const Fps = () => {
                       marginRight: "5px",
                       padding: "5px 10px",
                       backgroundColor:
-                        currentPage === i ? "#50698d" : "#f8f9fa",
+                        currentPage === i ? "#a99696d9" : "#f8f9fa",
                       color: currentPage === i ? "#fff" : "#000",
                       border: "1px solid #dee2e6",
                       borderRadius: "4px",

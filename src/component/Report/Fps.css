@@ -41,7 +41,7 @@ input:focus,
 .pagination-btn {
   padding: 6px 12px;
   margin: 0 3px;
-  background-color: #f1f1f1;
+  background-color: #e0dcdc;
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
@@ -50,9 +50,9 @@ input:focus,
 }
 
 .pagination-btn:hover {
-  background-color: #50698d;
+  background-color: #a99696d9;
   color: white;
-  border-color: #50698d;
+  border-color: #a99696d9;
 }
 
 .pagination-btn:disabled {
@@ -84,14 +84,15 @@ input:focus,
 }
 .badge-custom {
   display: inline-block;
-  background-color: #50698d; /* Bootstrap primary blue */
-  color: white;
+  border: 1px solid white;
+  background-color: darkgrey; /* Bootstrap primary blue */
+  color: black;
   padding: 8px 14px;
   border-radius: 20px;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 13px;
 }
 .headerColor {
-  background-color: #50698d !important;
-  color: white !important;
+  background-color: darkgrey !important;
+  color: black !important;
 }

@@ -552,7 +552,10 @@ const StockRajester = () => {
         <div className="subDiv">
           <div style={{ width: "80px" }}></div>
           <span className="mainHeading">
-            <span style={{ color: "white" }}>Stock Register</span>
+            <span style={{ color: "white", fontSize: "2rem" }}>
+              {" "}
+              STOCK REGISTER
+            </span>
           </span>
           {isFormSubmitted ? (
             <div style={{ display: "flex", gap: "10px" }}>
@@ -902,7 +905,7 @@ const StockRajester = () => {
                             >
                               <i
                                 className="fa fa-edit"
-                                style={{ color: "#50698d", fontSize: "18px" }}
+                                style={{ color: "#6e5c5c", fontSize: "18px" }}
                               ></i>
                             </button>
                           )}
@@ -913,7 +916,7 @@ const StockRajester = () => {
                           >
                             <i
                               className="fa fa-trash"
-                              style={{ color: "#50698d", fontSize: "18px" }}
+                              style={{ color: "#6e5c5c", fontSize: "18px" }}
                             ></i>
                           </button>
                         </div>

@@ -67,7 +67,7 @@ function App() {
               height: "24px",
               borderRadius: "50%",
               backgroundColor: "#ffff",
-              color: "#50698d",
+              color: "#e0dcdc",
               textAlign: "center",
               lineHeight: "24px",
               fontSize: "16px",

@@ -46,7 +46,7 @@ const Loginpage = ({ onLogin }) => {
           </div>
           <div className="input-group mb-3">
             <span className="input-group-text">
-              <i className="bi bi-lock-fill" style={{ color: "#50698d" }}></i>
+              <i className="bi bi-lock-fill" style={{ color: "#a99696d9" }}></i>
             </span>
             <input
               type={showPassword ? "text" : "password"}
@@ -65,11 +65,12 @@ const Loginpage = ({ onLogin }) => {
                 style={{
                   backgroundColor: "transparent",
                   borderColor: "#ced4da",
-                  color: "#50698d",
+                  color: "#a99696d9",
                 }}
                 disabled={isLoading}
               >
                 <i
+                  style={{ fontSize: "18px" }}
                   className={`bi ${
                     showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"
                   }`}
@@ -81,7 +82,7 @@ const Loginpage = ({ onLogin }) => {
             type="submit"
             className="btn w-100 login-button"
             style={{
-              backgroundColor: "#50698d",
+              backgroundColor: "#a99696d9",
               color: "#fff",
               height: "38px",
               display: "flex",
@@ -90,6 +91,8 @@ const Loginpage = ({ onLogin }) => {
               gap: "8px",
               position: "relative",
               transition: "all 0.3s ease",
+              fontSize: "19px",
+              fontWeight: "600",
             }}
             disabled={isLoading}
           >
@@ -100,7 +103,6 @@ const Loginpage = ({ onLogin }) => {
                   <span className="spinner-dot"></span>
                   <span className="spinner-dot"></span>
                 </span>
-                {/* Logging in... */}
               </>
             ) : (
               "Login"

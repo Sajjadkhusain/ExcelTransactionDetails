@@ -2,7 +2,8 @@
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: #50698d;
+  background-color: darkgray;
+  /* background-color: #50698d; */
   color: white;
   display: flex;
   justify-content: space-between;
@@ -33,7 +34,7 @@
 }
 
 .nav-links a:hover {
-  color: #00bcd4;
+  color: white;
 }
 
 /*********************dropdown*****************************/
@@ -43,7 +44,8 @@
 }
 
 .dropdown-menu {
-  background-color: #50698d;
+  background-color: darkgray;
+  /* background-color: #50698d; */
   border-radius: 8px;
   padding: 8px 0;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
@@ -67,6 +69,7 @@
 }
 
 .dropdown-item:hover {
-  background-color: #50698d;
+  background-color: lightgray;
+  /* background-color: #50698d; */
   color: #fff;
 }

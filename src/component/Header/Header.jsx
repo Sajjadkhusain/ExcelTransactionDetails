@@ -8,7 +8,29 @@ const Header = ({ onLogout }) => {
       <header className="navbar">
         <div className="logo">WELCOME</div>
         <nav className="nav-links">
-          <a href="/dashboard">Home</a>
+          <button
+            style={{
+              backgroundColor: "darkgray",
+              color: "#fff",
+              borderRadius: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "6px 12px",
+              gap: "6px",
+              boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
+              border: "none",
+              fontSize: "14px",
+              cursor: "pointer",
+              fontSize: "15px",
+              fontWeight: 500,
+            }}
+          >
+            <i className="fa fa-home" style={{ fontSize: "16px" }}></i>
+            <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>
+              Home
+            </Link>
+          </button>
 
           <div
             className="dropdown"
@@ -18,7 +40,7 @@ const Header = ({ onLogout }) => {
             <button
               className="dropdown-toggle nav-item btn"
               style={{
-                backgroundColor: "#50698d",
+                backgroundColor: "darkgray",
                 color: "#fff",
                 borderRadius: "20px",
                 display: "flex",
@@ -30,6 +52,8 @@ const Header = ({ onLogout }) => {
                 border: "none",
                 fontSize: "14px",
                 cursor: "pointer",
+                fontSize: "15px",
+                fontWeight: 500,
               }}
             >
               Reports
@@ -52,7 +76,7 @@ const Header = ({ onLogout }) => {
             className="btn"
             title="Logout"
             style={{
-              backgroundColor: "#50698d",
+              backgroundColor: "darkgray",
               color: "#fff",
               borderRadius: "20px",
               display: "flex",
@@ -67,7 +91,7 @@ const Header = ({ onLogout }) => {
             }}
           >
             <i className="bi bi-box-arrow-right"></i>
-            <span>Logout</span>
+            <span style={{ fontSize: "15px", fontWeight: 500 }}>Logout</span>
           </button>
         </nav>
       </header>
