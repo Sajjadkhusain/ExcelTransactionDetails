@@ -166,7 +166,7 @@ const StockRajester = () => {
     const currentDate = new Date().toLocaleDateString();
     const printContent = `
     <div style="margin-bottom: 20px; text-align: center;">
-      <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
+      <h2 style="margin-bottom: 15px;">स्टॉक रजिस्टर अहवाल</h2>
       <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
         <div style="text-align: left;">
           <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
@@ -296,116 +296,6 @@ const StockRajester = () => {
   `);
     printWindow.document.close();
   };
-  //   const printWindow = window.open("", "PRINT", "width=1000,height=600");
-  //   const printContent = `
-  //   <div style="margin-bottom: 20px; text-align: center;">
-  //     <h2 style="margin-bottom: 15px;">Stock Register Report</h2>
-  //     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-  //       <div style="text-align: left;">
-  //         <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
-  //           formData.shopkeeperName || "N/A"
-  //         }</p>
-  //         <p style="margin: 2px 0;"><strong>गाव:</strong> ${
-  //           formData.villageName || "N/A"
-  //         }</p>
-  //         <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
-  //           formData.parker ? formData.parker.label : "N/A"
-  //         }</p>
-  //       </div>
-  //       <div style="text-align: left;">
-  //         <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
-  //           formData.machineNumber || "N/A"
-  //         }</p>
-  //         <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
-  //           formData.taluka || "N/A"
-  //         }</p>
-  //         <p style="margin: 2px 0;"><strong>महिना:</strong> ${
-  //           formData.month || "N/A"
-  //         }</p>
-  //       </div>
-  //     </div>
-  //   </div>
-
-  //   <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
-  //     <thead>
-  //       <tr>
-  //        <th>अनुक्रमांक</th>
-  //         <th>दिनांक</th>
-  //         <th>पूर्वीची शिल्लक</th>
-  //         <th>आवक</th>
-  //         <th>एकूण</th>
-  //         <th>विक्री</th>
-  //         <th>शिल्लक</th>
-  //         <th>शेरा</th>
-  //       </tr>
-  //     </thead>
-  //     <tbody>
-  //       ${rows
-  //         .map(
-  //           (row) => `
-  //         <tr>
-  //           <td>${row.srNo}</td>
-  //           <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
-  //           <td>${formatNumber(row.openingBal)}</td>
-  //           <td>${formatNumber(row.aawak)}</td>
-  //           <td>${formatNumber(row.total)}</td>
-  //           <td>${formatNumber(row.sale)}</td>
-  //           <td>${formatNumber(row.closeBalance)}</td>
-  //           <td>${row.remark || "-"}</td>
-  //         </tr>
-  //       `
-  //         )
-  //         .join("")}
-  //       <tr style="font-weight: bold;">
-  //         <td colspan="2">एकूण</td>
-  //         <td>${formatNumber(totals.openingBal)}</td>
-  //         <td>${formatNumber(totals.aawak)}</td>
-  //         <td>${formatNumber(totals.total)}</td>
-  //         <td>${formatNumber(totals.sale)}</td>
-  //         <td>${formatNumber(totals.closeBalance)}</td>
-  //         <td></td>
-  //       </tr>
-  //     </tbody>
-  //   </table>
-  // `;
-
-  //   printWindow.document.write(`
-  //   <!DOCTYPE html>
-  //   <html>
-  //     <head>
-  //       <title>Stock Register Report</title>
-  //       <style>
-  //         @page {
-  //           size: auto;
-  //           margin: 0;
-  //         }
-  //         body {
-  //           margin: 0;
-  //           padding: 15mm;
-  //         }
-  //         @media print {
-  //           @page {
-  //             margin: 0;
-  //           }
-  //           body {
-  //             padding: 10mm;
-  //           }
-  //         }
-  //       </style>
-  //     </head>
-  //     <body>
-  //       ${printContent}
-  //       <script>
-  //         window.onafterprint = function() {
-  //           window.close();
-  //         };
-  //         window.print();
-  //       </script>
-  //     </body>
-  //   </html>
-  // `);
-  //   printWindow.document.close();
-  // };
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
