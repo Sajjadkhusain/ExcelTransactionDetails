@@ -1,39 +1,75 @@
-/* Ensure table cells have consistent height */
-.table td,
-.table th {
-  vertical-align: middle;
-  min-width: 100px;
+.mainDiv {
+  margin-top: 77px;
+  border-radius: 10px;
+  border: 1px solid #50698d;
+  margin-top: 77px;
+  background-color: #f3eeee;
 }
-
-/* Make action buttons more compact */
-.btn-sm.p-1 {
-  padding: 0.15rem 0.35rem;
+.subDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  font-family: sans-serif;
+  position: relative;
+  padding: 8px;
 }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .table-responsive {
-    font-size: 0.9rem;
-  }
-  .form-control-sm {
-    padding: 0.15rem 0.3rem;
-    font-size: 0.8rem;
-  }
+.mainHeading {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+  text-decoration-color: #50698d;
+  text-decoration-thickness: 2px;
 }
-
-.badge-custom {
-  display: inline-block;
+.circleBtn {
+  border-radius: 50%;
   background-color: #50698d;
-  color: white;
-  padding: 3px 13px;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
-.lblName {
-  text-align: left;
-  display: block;
+.circleBtn:hover {
+  background-color: #50698d;
+  color: #fff;
+}
+
+/****************Table css****************************/
+.headingColor {
+  background-color: #e0dcdc !important;
+  /* background-color: #50698d !important; */
+  color: black !important;
+}
+.scrollable-wrapper {
+  max-height: 471px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.scrollable-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+}
+
+.scrollable-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
   font-weight: bold;
-  font-size: 15px;
-  font-family: Arial, Helvetica, sans-serif;
+  z-index: 1;
+}
+/******Toastify css *************/
+/* Add this to your CSS file */
+.custom-toast {
+  background-color: #50698d !important; /* Deep teal background */
+  color: #ffffff !important; /* White text */
+  font-weight: bold;
+  border-radius: 8px;
 }

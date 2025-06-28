@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./Stock.css";
 import Select from "react-select";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const StockRajester = () => {
-  // Form state
   const [formData, setFormData] = useState({
     shopkeeperName: "",
     machineNumber: "",
@@ -92,7 +92,29 @@ const StockRajester = () => {
     const currentRow = rows.find((row) => row.id === id);
 
     if (!currentRow.date || !currentRow.openingBal) {
-      alert("Please fill in Date and Opening Balance fields");
+      toast.success("Please Enter Date fields!", {
+        className: "custom-toast",
+        progressClassName: "custom-progress",
+        icon: (
+          <span
+            style={{
+              display: "inline-block",
+              width: "24px",
+              height: "24px",
+              borderRadius: "50%",
+              backgroundColor: "#ffff",
+              color: "#50698d",
+              textAlign: "center",
+              lineHeight: "24px",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            ✔
+          </span>
+        ),
+      });
+      // alert("Please fill in Date and Opening Balance fields");
       return;
     }
 
@@ -165,137 +187,137 @@ const StockRajester = () => {
 
     const currentDate = new Date().toLocaleDateString();
     const printContent = `
-    <div style="margin-bottom: 20px; text-align: center;">
-      <h2 style="margin-bottom: 15px;">स्टॉक रजिस्टर अहवाल</h2>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-        <div style="text-align: left;">
-          <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
-            formData.shopkeeperName || "N/A"
-          }</p>
-          <p style="margin: 2px 0;"><strong>गाव:</strong> ${
-            formData.villageName || "N/A"
-          }</p>
-          <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
-            formData.parker ? formData.parker.label : "N/A"
-          }</p>
-        </div>
-        <div style="text-align: left;">
-          <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
-            formData.machineNumber || "N/A"
-          }</p>
-          <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
-            formData.taluka || "N/A"
-          }</p>
-          <p style="margin: 2px 0;"><strong>महिना:</strong> ${
-            formData.month || "N/A"
-          }</p>
+      <div style="margin-bottom: 20px; text-align: center;">
+        <h2 style="margin-bottom: 15px;">स्टॉक रजिस्टर अहवाल</h2>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+          <div style="text-align: left;">
+            <p style="margin: 2px 0;"><strong>रास्तभाव दुकानदाराचे नाव:</strong> ${
+              formData.shopkeeperName || "N/A"
+            }</p>
+            <p style="margin: 2px 0;"><strong>गाव:</strong> ${
+              formData.villageName || "N/A"
+            }</p>
+            <p style="margin: 2px 0;"><strong>धान्याचे प्रकार:</strong> ${
+              formData.parker ? formData.parker.label : "N/A"
+            }</p>
+          </div>
+          <div style="text-align: left;">
+            <p style="margin: 2px 0;"><strong>पॉस मशीन न:</strong> ${
+              formData.machineNumber || "N/A"
+            }</p>
+            <p style="margin: 2px 0;"><strong>तालुका:</strong> ${
+              formData.taluka || "N/A"
+            }</p>
+            <p style="margin: 2px 0;"><strong>महिना:</strong> ${
+              formData.month || "N/A"
+            }</p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
-      <thead>
-        <tr>
-         <th>अनुक्रमांक</th>
-          <th>दिनांक</th>
-          <th>पूर्वीची शिल्लक</th>
-          <th>आवक</th>
-          <th>एकूण</th>
-          <th>विक्री</th>
-          <th>शिल्लक</th>
-          <th>शेरा</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows
-          .map(
-            (row) => `
+  
+      <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; margin-bottom: 20px;">
+        <thead>
           <tr>
-            <td>${row.srNo}</td>
-            <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
-            <td>${formatNumber(row.openingBal)}</td>
-            <td>${formatNumber(row.aawak)}</td>
-            <td>${formatNumber(row.total)}</td>
-            <td>${formatNumber(row.sale)}</td>
-            <td>${formatNumber(row.closeBalance)}</td>
-            <td>${row.remark || "-"}</td>
+           <th>अनुक्रमांक</th>
+            <th>दिनांक</th>
+            <th>पूर्वीची शिल्लक</th>
+            <th>आवक</th>
+            <th>एकूण</th>
+            <th>विक्री</th>
+            <th>शिल्लक</th>
+            <th>शेरा</th>
           </tr>
-        `
-          )
-          .join("")}
-        <tr style="font-weight: bold;">
-          <td colspan="2">एकूण</td>
-          <td>${formatNumber(totals.openingBal)}</td>
-          <td>${formatNumber(totals.aawak)}</td>
-          <td>${formatNumber(totals.total)}</td>
-          <td>${formatNumber(totals.sale)}</td>
-          <td>${formatNumber(totals.closeBalance)}</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-  `;
+        </thead>
+        <tbody>
+          ${rows
+            .map(
+              (row) => `
+            <tr>
+              <td>${row.srNo}</td>
+              <td>${formatDateToDDMMYYYY(row.date) || "-"}</td>
+              <td>${formatNumber(row.openingBal)}</td>
+              <td>${formatNumber(row.aawak)}</td>
+              <td>${formatNumber(row.total)}</td>
+              <td>${formatNumber(row.sale)}</td>
+              <td>${formatNumber(row.closeBalance)}</td>
+              <td>${row.remark || "-"}</td>
+            </tr>
+          `
+            )
+            .join("")}
+          <tr style="font-weight: bold;">
+            <td colspan="2">एकूण</td>
+            <td>${formatNumber(totals.openingBal)}</td>
+            <td>${formatNumber(totals.aawak)}</td>
+            <td>${formatNumber(totals.total)}</td>
+            <td>${formatNumber(totals.sale)}</td>
+            <td>${formatNumber(totals.closeBalance)}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
 
     const printWindow = window.open("", "PRINT", "width=1000,height=700");
     printWindow.document.write(`
-    <html>
-      <head>
-        <title>Stock Register Report</title>
-       <style>
-        @page {
-          margin: 20mm;
-          @bottom-center {
-            content: "पृष्ठ क्रमांक: " counter(page) " / " counter(pages);
-            font-size: 12px;
-            font-family: Arial, sans-serif;
+      <html>
+        <head>
+          <title>Stock Register Report</title>
+         <style>
+          @page {
+            margin: 20mm;
+            @bottom-center {
+              content: "पृष्ठ क्रमांक: " counter(page) " / " counter(pages);
+              font-size: 12px;
+              font-family: Arial, sans-serif;
+            }
           }
-        }
-
-          body {
-            font-family: Arial, sans-serif;
-            padding: 10mm;
-            color: #333;
-          }
-
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-          }
-
-          th, td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: center;
-          }
-
-          th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-          }
-
-          h2, h3 {
-            color: #50698d;
-            margin-top: 0;
-          }
-        </style>
-
-      </head>
-      <body>
-        ${printContent}
-        <script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
+  
+            body {
+              font-family: Arial, sans-serif;
+              padding: 10mm;
+              color: #333;
+            }
+  
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 15px;
+            }
+  
+            th, td {
+              border: 1px solid #000;
+              padding: 8px;
+              text-align: center;
+            }
+  
+            th {
+              background-color: #f2f2f2;
+              font-weight: bold;
+            }
+  
+            h2, h3 {
+              color: #50698d;
+              margin-top: 0;
+            }
+          </style>
+  
+        </head>
+        <body>
+          ${printContent}
+          <script>
+            window.onload = function() {
               setTimeout(function() {
-                window.close();
-              }, 500);
-            }, 200);
-          }
-        </script>
-      </body>
-    </html>
-  `);
+                window.print();
+                setTimeout(function() {
+                  window.close();
+                }, 500);
+              }, 200);
+            }
+          </script>
+        </body>
+      </html>
+    `);
     printWindow.document.close();
   };
   const handleFormSubmit = (e) => {
@@ -343,451 +365,415 @@ const StockRajester = () => {
     return `${day}-${monthName}-${year}`;
   };
   return (
-    <div className="container text-center card">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "20px",
-          fontFamily: "sans-serif",
-          position: "relative",
-        }}
-      >
-        <div style={{ width: "80px" }}></div>
-        <span
-          style={{
-            fontSize: "20px",
-            fontWeight: "bold",
-            textAlign: "center",
-            flex: 1,
-            textDecorationColor: "#50698d",
-            textDecorationThickness: "2px",
-          }}
-        >
-          Stock Register
-        </span>
-        {isFormSubmitted ? (
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => setIsFormSubmitted(false)}
-              className="btn"
-              title="Back to list"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
-            </button>
-          </div>
-        ) : (
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => setIsFormSubmitted(true)}
-              className="btn"
-              title="Add"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-plus" aria-hidden="true"></i>
-            </button>
-
-            <button
-              onClick={handlePrint}
-              className="btn"
-              disabled={rows.length === 0}
-              title="Print"
-              style={{
-                borderRadius: "50%",
-                backgroundColor: "#50698d",
-                color: "#fff",
-                boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 0,
-              }}
-            >
-              <i className="fa fa-print" aria-hidden="true"></i>
-            </button>
-          </div>
-        )}
-      </div>
-
-      {isFormSubmitted ? (
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Shopkeeper Name (रास्तभाव दुकानदाराचे नाव)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="shopkeeperName"
-                    value={formData.shopkeeperName}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Machine Number (पॉस मशीन न)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="machineNumber"
-                    value={formData.machineNumber}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Village Name (गाव)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="villageName"
-                    value={formData.villageName}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Taluka (तालुका)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="taluka"
-                    value={formData.taluka}
-                    onChange={handleFormChange}
-                    readOnly
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">
-                    Schemes (धान्याचे प्रकार)
-                  </label>
-                  <Select
-                    value={formData.parker}
-                    onChange={handleParkerChange}
-                    options={parkerOptions}
-                    isSearchable={true}
-                    placeholder="Select Scheme..."
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    menuPlacement="auto" // or "top" to always open on top
-                    styles={{
-                      control: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                        minHeight: "38px",
-                      }),
-                      singleValue: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                      placeholder: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                      }),
-                      option: (provided) => ({
-                        ...provided,
-                        textAlign: "left",
-                        color: "#333",
-                        backgroundColor: "white",
-                        "&:hover": {
-                          backgroundColor: "#f0f0f0",
-                        },
-                      }),
-                      menu: (provided) => ({
-                        ...provided,
-                        zIndex: 9999,
-                        marginBottom: "0px", // Adjust for top placement
-                        marginTop: "0px",
-                        position: "absolute",
-                        bottom: "100%", // Positions menu above the control
-                        top: "auto", // Override default top positioning
-                      }),
-                      menuList: (provided) => ({
-                        ...provided,
-                        padding: 0,
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                      }),
-                    }}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="form-label lblName">Month (महिना)</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="month"
-                    value={formData.month}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="d-flex justify-content-center gap-2 mb-3 mt-4">
+    <>
+      <div className="container mainDiv">
+        <div className="subDiv">
+          <div style={{ width: "80px" }}></div>
+          <span className="mainHeading">Stock Register</span>
+          {isFormSubmitted ? (
+            <div style={{ display: "flex", gap: "10px" }}>
               <button
-                type="button"
-                className="btn"
-                style={{ backgroundColor: "#50698d", color: "#fff" }}
                 onClick={() => setIsFormSubmitted(false)}
+                className="btn circleBtn"
+                title="Back to list"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn"
-                style={{ backgroundColor: "#50698d", color: "#fff" }}
-              >
-                Submit
+                <i className="fa fa-arrow-circle-left" aria-hidden="true"></i>
               </button>
             </div>
-          </form>
+          ) : (
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={() => setIsFormSubmitted(true)}
+                className="btn circleBtn"
+                title="Add"
+              >
+                <i className="fa fa-plus" aria-hidden="true"></i>
+              </button>
+
+              <button
+                onClick={handlePrint}
+                className="btn circleBtn"
+                disabled={rows.length === 0}
+                title="Print"
+              >
+                <i className="fa fa-print" aria-hidden="true"></i>
+              </button>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="card mt-4" id="printable-table">
-          <div className="card-body p-0">
-            <table className="table table-bordered table-striped mb-0">
-              <thead className="table-light">
-                <tr>
-                  <th className="headerColor text-center align-middle">
-                    Sr No
-                  </th>
-                  <th className="headerColor text-center align-middle">Date</th>
-                  <th className="headerColor text-center align-middle">
-                    Opening Bal
-                  </th>
-                  <th className="headerColor text-center align-middle">
-                    Income
-                  </th>
-                  <th className="headerColor text-center align-middle">
-                    Total
-                  </th>
-                  <th className="headerColor text-center align-middle">Sale</th>
-                  <th className="headerColor text-center align-middle">
-                    Close Balance
-                  </th>
-                  <th className="headerColor text-center align-middle">
-                    Remark
-                  </th>
-                  <th className="headerColor text-center align-middle">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id}>
-                    <td className="text-center align-middle">{row.srNo}</td>
-                    <td className="align-middle">
-                      {editingId === row.id ? (
-                        <input
-                          className="form-control form-control-sm"
-                          type="date"
-                          value={row.date}
-                          onChange={(e) =>
-                            handleInputChange(row.id, "date", e.target.value)
-                          }
-                          required
-                        />
-                      ) : row.date ? (
-                        formatDateToDDMMYYYY(row.date)
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className="align-middle">
-                      {editingId === row.id ? (
-                        <input
-                          className="form-control form-control-sm"
-                          type="number"
-                          step="0.01"
-                          value={row.openingBal}
-                          onChange={(e) =>
-                            handleInputChange(
-                              row.id,
-                              "openingBal",
-                              e.target.value
-                            )
-                          }
-                          required
-                        />
-                      ) : (
-                        formatNumber(row.openingBal)
-                      )}
-                    </td>
-                    <td className="align-middle">
-                      {editingId === row.id ? (
-                        <input
-                          className="form-control form-control-sm"
-                          type="number"
-                          step="0.01"
-                          value={row.aawak}
-                          onChange={(e) =>
-                            handleInputChange(row.id, "aawak", e.target.value)
-                          }
-                        />
-                      ) : (
-                        formatNumber(row.aawak)
-                      )}
-                    </td>
-                    <td className="text-center align-middle">
-                      {formatNumber(row.total)}
-                    </td>
-                    <td className="align-middle">
-                      {editingId === row.id ? (
-                        <input
-                          className="form-control form-control-sm"
-                          type="number"
-                          step="0.01"
-                          value={row.sale}
-                          onChange={(e) =>
-                            handleInputChange(row.id, "sale", e.target.value)
-                          }
-                        />
-                      ) : (
-                        formatNumber(row.sale)
-                      )}
-                    </td>
-                    <td className="text-center align-middle">
-                      {formatNumber(row.closeBalance)}
-                    </td>
-                    <td className="align-middle">
-                      {editingId === row.id ? (
-                        <input
-                          className="form-control form-control-sm"
-                          type="text"
-                          value={row.remark}
-                          onChange={(e) =>
-                            handleInputChange(row.id, "remark", e.target.value)
-                          }
-                        />
-                      ) : (
-                        row.remark || "—"
-                      )}
-                    </td>
-                    <td className="text-center align-middle">
-                      <div className="d-flex gap-2 justify-content-center">
-                        {editingId === row.id ? (
-                          <button
-                            onClick={() => handleRowSubmit(row.id)}
-                            className="btn btn-sm p-1"
-                            title="Save"
-                          >
-                            <i
-                              className="fa fa-save"
-                              style={{ color: "#50698d", fontSize: "18px" }}
-                            ></i>
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleEdit(row.id)}
-                            className="btn btn-sm p-1"
-                            title="Edit"
-                          >
-                            <i
-                              className="fa fa-edit"
-                              style={{ color: "#50698d", fontSize: "18px" }}
-                            ></i>
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleDelete(row.id)}
-                          className="btn btn-sm p-1"
-                          title="Delete"
-                        >
-                          <i
-                            className="fa fa-trash"
-                            style={{ color: "#50698d", fontSize: "18px" }}
-                          ></i>
-                        </button>
-                      </div>
-                    </td>
+        <div className="ThirdDiv">
+          {isFormSubmitted ? (
+            <form onSubmit={handleFormSubmit}>
+              <div className="row">
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">
+                      Shopkeeper Name (रास्तभाव दुकानदाराचे नाव)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="shopkeeperName"
+                      value={formData.shopkeeperName}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">
+                      Machine Number (पॉस मशीन न)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="machineNumber"
+                      value={formData.machineNumber}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">
+                      Village Name (गाव)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="villageName"
+                      value={formData.villageName}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">
+                      Taluka (तालुका)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="taluka"
+                      value={formData.taluka}
+                      onChange={handleFormChange}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">
+                      Schemes (धान्याचे प्रकार)
+                    </label>
+                    <Select
+                      value={formData.parker}
+                      onChange={handleParkerChange}
+                      options={parkerOptions}
+                      isSearchable={true}
+                      placeholder="Select Scheme..."
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      menuPlacement="auto" // or "top" to always open on top
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          textAlign: "left",
+                          minHeight: "38px",
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          textAlign: "left",
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          textAlign: "left",
+                        }),
+                        option: (provided) => ({
+                          ...provided,
+                          textAlign: "left",
+                          color: "#333",
+                          backgroundColor: "white",
+                          "&:hover": {
+                            backgroundColor: "#f0f0f0",
+                          },
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          zIndex: 9999,
+                          marginBottom: "0px", // Adjust for top placement
+                          marginTop: "0px",
+                          position: "absolute",
+                          bottom: "100%", // Positions menu above the control
+                          top: "auto", // Override default top positioning
+                        }),
+                        menuList: (provided) => ({
+                          ...provided,
+                          padding: 0,
+                          maxHeight: "200px",
+                          overflowY: "auto",
+                        }),
+                      }}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-md-4 mb-3">
+                  <div className="form-group">
+                    <label className="form-label lblName">Month (महिना)</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="month"
+                      value={formData.month}
+                      onChange={handleFormChange}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-center gap-2 mb-3 mt-4">
+                <button
+                  type="button"
+                  className="btn"
+                  style={{ backgroundColor: "#50698d", color: "#fff" }}
+                  onClick={() => setIsFormSubmitted(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ backgroundColor: "#50698d", color: "#fff" }}
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div
+              className="scrollable-wrapper"
+              style={{ border: "1px solid balck" }}
+            >
+              <table
+                className="table table-bordered table-striped mb-0 scrollable-table"
+                style={{ border: "1px solid balck" }}
+              >
+                <thead className="table-light">
+                  <tr>
+                    <th
+                      style={{ width: "80px" }}
+                      className="text-center align-middle headingColor "
+                    >
+                      Sr No
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Date
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Opening Bal
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Income
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Total
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Sale
+                    </th>
+                    <th
+                      style={{ width: "120px" }}
+                      className="text-center align-middle headingColor "
+                    >
+                      Close Balance
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Remark
+                    </th>
+                    <th className="text-center align-middle headingColor ">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-                <tr className="fw-bold">
-                  <td className="text-center align-middle" colSpan="2">
-                    Totals
-                  </td>
-                  <td className="text-center align-middle">
-                    <span className="badge-custom">
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.id}>
+                      <td className="text-center align-middle">{row.srNo}</td>
+                      <td className="align-middle">
+                        {editingId === row.id ? (
+                          <input
+                            className="form-control form-control-sm"
+                            type="date"
+                            value={row.date}
+                            onChange={(e) =>
+                              handleInputChange(row.id, "date", e.target.value)
+                            }
+                            required
+                          />
+                        ) : row.date ? (
+                          formatDateToDDMMYYYY(row.date)
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td className="align-middle">
+                        {editingId === row.id ? (
+                          <input
+                            className="form-control form-control-sm"
+                            type="number"
+                            step="0.01"
+                            value={row.openingBal}
+                            onChange={(e) =>
+                              handleInputChange(
+                                row.id,
+                                "openingBal",
+                                e.target.value
+                              )
+                            }
+                            required
+                          />
+                        ) : (
+                          formatNumber(row.openingBal)
+                        )}
+                      </td>
+                      <td className="align-middle">
+                        {editingId === row.id ? (
+                          <input
+                            className="form-control form-control-sm"
+                            type="number"
+                            step="0.01"
+                            value={row.aawak}
+                            onChange={(e) =>
+                              handleInputChange(row.id, "aawak", e.target.value)
+                            }
+                          />
+                        ) : (
+                          formatNumber(row.aawak)
+                        )}
+                      </td>
+                      <td className="text-center align-middle">
+                        {formatNumber(row.total)}
+                      </td>
+                      <td className="align-middle">
+                        {editingId === row.id ? (
+                          <input
+                            className="form-control form-control-sm"
+                            type="number"
+                            step="0.01"
+                            value={row.sale}
+                            onChange={(e) =>
+                              handleInputChange(row.id, "sale", e.target.value)
+                            }
+                          />
+                        ) : (
+                          formatNumber(row.sale)
+                        )}
+                      </td>
+                      <td className="text-center align-middle">
+                        {formatNumber(row.closeBalance)}
+                      </td>
+                      <td className="align-middle">
+                        {editingId === row.id ? (
+                          <input
+                            className="form-control form-control-sm"
+                            type="text"
+                            value={row.remark}
+                            onChange={(e) =>
+                              handleInputChange(
+                                row.id,
+                                "remark",
+                                e.target.value
+                              )
+                            }
+                          />
+                        ) : (
+                          row.remark || "—"
+                        )}
+                      </td>
+                      <td className="text-center align-middle">
+                        <div className="d-flex gap-2 justify-content-center">
+                          {editingId === row.id ? (
+                            <button
+                              onClick={() => handleRowSubmit(row.id)}
+                              className="btn btn-sm p-1"
+                              title="Save"
+                            >
+                              <i
+                                className="fa fa-save"
+                                style={{ color: "#50698d", fontSize: "18px" }}
+                              ></i>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleEdit(row.id)}
+                              className="btn btn-sm p-1"
+                              title="Edit"
+                            >
+                              <i
+                                className="fa fa-edit"
+                                style={{ color: "#50698d", fontSize: "18px" }}
+                              ></i>
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDelete(row.id)}
+                            className="btn btn-sm p-1"
+                            title="Delete"
+                          >
+                            <i
+                              className="fa fa-trash"
+                              style={{ color: "#50698d", fontSize: "18px" }}
+                            ></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <div className="mt-4"></div>
+                <tfoot>
+                  <tr>
+                    <td
+                      className="text-center align-middle headingColor "
+                      colSpan="2"
+                    >
+                      Totals
+                    </td>
+                    <td className="text-center align-middle headingColor ">
                       {formatNumber(totals.openingBal)}
-                    </span>
-                  </td>
-                  <td className="text-center align-middle">
-                    <span className="badge-custom ">
+                    </td>
+                    <td className="text-center align-middle headingColor ">
                       {formatNumber(totals.aawak)}
-                    </span>
-                  </td>
-                  <td className="text-center align-middle">
-                    <span className="badge-custom ">
+                    </td>
+                    <td className="text-center align-middle headingColor ">
                       {formatNumber(totals.total)}
-                    </span>
-                  </td>
-                  <td className="text-center align-middle">
-                    <span className="badge-custom">
+                    </td>
+                    <td className="text-center align-middle headingColor ">
                       {formatNumber(totals.sale)}
-                    </span>
-                  </td>
-                  <td className="text-center align-middle">
-                    <span className="badge-custom">
+                    </td>
+                    <td className="text-center align-middle headingColor ">
                       {formatNumber(totals.closeBalance)}
-                    </span>
-                  </td>
-                  <td colSpan="2"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    </td>
+
+                    <td
+                      className="text-center align-middle headingColor "
+                      colSpan="2"
+                    ></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
         </div>
-      )}
-      <div className="mt-4"></div>
-    </div>
+      </div>
+    </>
   );
 };
 
