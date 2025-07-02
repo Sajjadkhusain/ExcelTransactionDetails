@@ -22,12 +22,13 @@ const Loginpage = ({ onLogin }) => {
     <div className="d-flex justify-content-center align-items-center vh-100 dark-bg-gradient ">
       <div className="custom-card text-center p-4">
         <div className="mb-3">
-          <img
-            src={`${process.env.PUBLIC_URL}/img/img.jpg`}
+          <span>LOGIN</span>
+          {/* <img
+            src={`${process.env.PUBLIC_URL}/img/img2.png`}
             alt="Logo"
             height={150}
             style={{ borderRadius: "10px" }}
-          />
+          /> */}
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-group mb-3">
@@ -65,7 +66,7 @@ const Loginpage = ({ onLogin }) => {
                 style={{
                   backgroundColor: "transparent",
                   borderColor: "#ced4da",
-                  color: "#a99696d9",
+                  color: " #a99696",
                 }}
                 disabled={isLoading}
               >
