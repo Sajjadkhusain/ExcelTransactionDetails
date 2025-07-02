@@ -19,7 +19,7 @@ const Loginpage = ({ onLogin }) => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center vh-100 dark-bg-gradient ">
       <div className="custom-card text-center p-4">
         <div className="mb-3">
           <img
