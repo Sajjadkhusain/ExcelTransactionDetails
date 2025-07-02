@@ -6,7 +6,7 @@ const Header = ({ onLogout }) => {
   return (
     <div>
       <header className="navbar">
-        <div className="logo">WELCOME</div>
+        <div className="logo">TECHNO FORCAST</div>
         <nav className="nav-links">
           <button
             style={{
