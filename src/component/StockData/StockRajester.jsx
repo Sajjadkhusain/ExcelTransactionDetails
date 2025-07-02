@@ -894,7 +894,7 @@ const StockRajester = () => {
                             >
                               <i
                                 className="fa fa-save"
-                                style={{ color: "#50698d", fontSize: "18px" }}
+                                style={{ color: "#6e5c5c", fontSize: "18px" }}
                               ></i>
                             </button>
                           ) : (
