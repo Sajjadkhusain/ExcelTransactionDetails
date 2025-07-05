@@ -139,21 +139,23 @@ const StockRajester = () => {
   };
 
   const handleDelete = (id) => {
-    const rowIndex = rows.findIndex((row) => row.id === id);
-    const updatedRows = rows
-      .filter((row) => row.id !== id)
-      .map((row, index) => ({ ...row, srNo: index + 1 }));
+    if (window.confirm("Do you want to remove?")) {
+      const rowIndex = rows.findIndex((row) => row.id === id);
+      const updatedRows = rows
+        .filter((row) => row.id !== id)
+        .map((row, index) => ({ ...row, srNo: index + 1 }));
 
-    if (rowIndex < updatedRows.length && rowIndex > 0) {
-      updatedRows[rowIndex].openingBal =
-        updatedRows[rowIndex - 1].closeBalance || "0.00";
-      updatedRows[rowIndex].total = updatedRows[rowIndex].openingBal;
-    }
+      if (rowIndex < updatedRows.length && rowIndex > 0) {
+        updatedRows[rowIndex].openingBal =
+          updatedRows[rowIndex - 1].closeBalance || "0.00";
+        updatedRows[rowIndex].total = updatedRows[rowIndex].openingBal;
+      }
 
-    setRows(updatedRows);
+      setRows(updatedRows);
 
-    if (editingId === id) {
-      setEditingId(null);
+      if (editingId === id) {
+        setEditingId(null);
+      }
     }
   };
 
